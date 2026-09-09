@@ -1,7 +1,7 @@
-import Home from './pages/public/Home';
+import Portal from './pages/patient/Portal';
 
 function App() {
-  return <Home />;
+  return <Portal />;
 }
 
 export default App;
