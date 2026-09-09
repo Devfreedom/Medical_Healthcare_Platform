@@ -22,6 +22,15 @@
   --color-pastel-green: #DEEBE1;
   --color-pastel-green-ink: #3E7A57;
 
+  --color-status-ok: #3E7A57;
+  --color-status-ok-bg: #E4F0E8;
+  --color-status-warn: #B85C38;
+  --color-status-warn-bg: #FBEDE4;
+  --color-status-danger: #A3352C;
+  --color-status-danger-bg: #F7E2DF;
+  --color-status-info: #3E6E8E;
+  --color-status-info-bg: #DCEAF3;
+
   --font-serif: 'Source Serif Pro', Georgia, serif;
   --font-sans: -apple-system, 'Segoe UI', Inter, Helvetica, sans-serif;
 }
