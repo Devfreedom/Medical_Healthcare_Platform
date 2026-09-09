@@ -115,8 +115,8 @@ export default function AppointmentsView() {
         <div className="rounded-2xl border border-nb-line bg-nb-sand p-5 shadow-[0_12px_24px_rgba(19,42,44,0.04)]">
           <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="mb-2 block text-sm font-medium text-nb-ink">Reason</label>
-              <select name="reason" value={form.reason} onChange={handleChange} className="w-full rounded-full border border-nb-line bg-white px-4 py-3 text-nb-ink outline-none focus:border-nb-teal">
+              <label htmlFor="appointment-reason" className="mb-2 block text-sm font-medium text-nb-ink">Reason</label>
+              <select id="appointment-reason" name="reason" value={form.reason} onChange={handleChange} className="w-full rounded-full border border-nb-line bg-white px-4 py-3 text-nb-ink outline-none focus:border-nb-teal">
                 <option>Follow-up</option>
                 <option>Annual wellness</option>
                 <option>New concern</option>
@@ -124,23 +124,23 @@ export default function AppointmentsView() {
               </select>
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-nb-ink">Provider</label>
-              <select name="provider" value={form.provider} onChange={handleChange} className="w-full rounded-full border border-nb-line bg-white px-4 py-3 text-nb-ink outline-none focus:border-nb-teal">
+              <label htmlFor="appointment-provider" className="mb-2 block text-sm font-medium text-nb-ink">Provider</label>
+              <select id="appointment-provider" name="provider" value={form.provider} onChange={handleChange} className="w-full rounded-full border border-nb-line bg-white px-4 py-3 text-nb-ink outline-none focus:border-nb-teal">
                 <option>Dr. Amara Odum</option>
                 <option>Dr. Marcus Kane</option>
                 <option>Dr. Elena Marx</option>
               </select>
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-nb-ink">Visit type</label>
-              <select name="visitType" value={form.visitType} onChange={handleChange} className="w-full rounded-full border border-nb-line bg-white px-4 py-3 text-nb-ink outline-none focus:border-nb-teal">
+              <label htmlFor="appointment-visit-type" className="mb-2 block text-sm font-medium text-nb-ink">Visit type</label>
+              <select id="appointment-visit-type" name="visitType" value={form.visitType} onChange={handleChange} className="w-full rounded-full border border-nb-line bg-white px-4 py-3 text-nb-ink outline-none focus:border-nb-teal">
                 <option value="video">Video</option>
                 <option value="in-person">In person</option>
               </select>
             </div>
             <div>
-              <label className="mb-2 block text-sm font-medium text-nb-ink">Preferred date</label>
-              <input type="date" name="date" value={form.date} onChange={handleChange} className="w-full rounded-full border border-nb-line bg-white px-4 py-3 text-nb-ink outline-none focus:border-nb-teal" />
+              <label htmlFor="appointment-date" className="mb-2 block text-sm font-medium text-nb-ink">Preferred date</label>
+              <input id="appointment-date" type="date" name="date" value={form.date} onChange={handleChange} className="w-full rounded-full border border-nb-line bg-white px-4 py-3 text-nb-ink outline-none focus:border-nb-teal" />
             </div>
 
             <div className="md:col-span-2">
