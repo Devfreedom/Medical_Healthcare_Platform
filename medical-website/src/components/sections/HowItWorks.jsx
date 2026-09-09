@@ -1,5 +1,7 @@
 import { steps } from '../../data/steps';
 
+const stepIcons = ['📅', '👤', '📋', '☎️'];
+
 export default function HowItWorks() {
   return (
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 lg:px-8">
@@ -17,7 +19,7 @@ export default function HowItWorks() {
             {steps.map(({ id, title, description }) => (
               <div key={id} className="flex gap-4 rounded-[1.25rem] border border-nb-line bg-nb-paper p-4 shadow-[0_10px_24px_rgba(19,42,44,0.03)]">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-nb-sand text-lg text-nb-teal">
-                  {id}
+                  {stepIcons[id - 1]}
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-nb-ink">{title}</h3>

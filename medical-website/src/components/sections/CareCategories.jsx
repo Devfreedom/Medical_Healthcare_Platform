@@ -4,22 +4,22 @@ const tintMap = {
   tan: {
     bg: 'bg-pastel-tan',
     text: 'text-pastel-tan-ink',
-    icon: '🩺',
+    icon: '✚',
   },
   pink: {
     bg: 'bg-pastel-pink',
     text: 'text-pastel-pink-ink',
-    icon: '🩺',
+    icon: '♥',
   },
   blue: {
     bg: 'bg-pastel-blue',
     text: 'text-pastel-blue-ink',
-    icon: '⚕️',
+    icon: '⚑',
   },
   green: {
     bg: 'bg-pastel-green',
     text: 'text-pastel-green-ink',
-    icon: '🌿',
+    icon: '✓',
   },
 };
 
@@ -38,7 +38,7 @@ export default function CareCategories() {
 
           return (
             <article key={id} className="rounded-[1.5rem] border border-nb-line bg-nb-paper p-6 shadow-[0_16px_30px_rgba(19,42,44,0.04)]">
-              <div className={`${palette.bg} ${palette.text} mb-5 flex h-16 w-16 items-center justify-center rounded-full text-2xl`}>
+              <div className={`${palette.bg} ${palette.text} mb-5 flex h-16 w-16 items-center justify-center rounded-full text-2xl font-bold`}>
                 {palette.icon}
               </div>
               <h3 className="mb-3 text-xl font-semibold text-nb-ink">{title}</h3>
