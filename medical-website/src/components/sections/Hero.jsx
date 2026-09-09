@@ -13,11 +13,26 @@ export default function Hero() {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: '' }));
+    setSubmitted(false);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setSubmitted(true);
+    const nextErrors = {};
+    const today = new Date().toISOString().slice(0, 10);
+
+    if (!form.fullName.trim()) nextErrors.fullName = 'Please enter your full name.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      nextErrors.email = 'Please enter a valid email address.';
+    }
+    if (!form.service) nextErrors.service = 'Please select a service.';
+    if (!form.appointmentDate || form.appointmentDate <= today) {
+      nextErrors.appointmentDate = 'Please choose a future appointment date.';
+    }
+
+    setErrors(nextErrors);
+    setSubmitted(Object.keys(nextErrors).length === 0);
   };
 
   return (
