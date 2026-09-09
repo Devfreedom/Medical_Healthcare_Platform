@@ -19,7 +19,10 @@ export default function PortalSidebar({ navItems, activePage, onSelect, onBack, 
           className="fixed inset-0 z-20 bg-nb-ink/40 lg:hidden"
         />
       )}
-      <aside className={`fixed inset-y-0 left-0 z-20 w-60 shrink-0 bg-nb-teal-dark text-white transition-transform lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside
+        className="fixed inset-y-0 left-0 z-20 w-60 shrink-0 bg-nb-teal-dark text-white transition-transform lg:static"
+        style={{ transform: isOpen ? 'translateX(0)' : 'translateX(-100%)' }}
+      >
       <div className="flex h-full flex-col px-4 py-6">
         <div className="mb-8 flex items-center gap-3 px-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-sm font-bold text-white">
