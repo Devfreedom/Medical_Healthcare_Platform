@@ -1,1 +1,50 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&display=swap');
+
+@import 'tailwindcss';
+
+:root {
+  font-family: -apple-system, 'Segoe UI', Inter, Helvetica, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #132A2C;
+  background: #FBFAF6;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #FBFAF6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
