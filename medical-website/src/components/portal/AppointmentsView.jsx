@@ -5,6 +5,7 @@ import StatusBadge from './StatusBadge';
 export default function AppointmentsView() {
   const [activeTab, setActiveTab] = useState('upcoming');
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({
     reason: 'Follow-up',
     provider: 'Dr. Amara Odum',
@@ -15,10 +16,21 @@ export default function AppointmentsView() {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    setSubmitted(false);
+    setError('');
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    const today = new Date().toISOString().slice(0, 10);
+    if (form.date <= today) {
+      setSubmitted(false);
+      setError('Please choose a future date for your appointment.');
+      return;
+    }
+
+    setError('');
     setSubmitted(true);
   };
 
@@ -135,9 +147,10 @@ export default function AppointmentsView() {
               <button type="submit" className="rounded-full bg-nb-clay px-6 py-3 font-semibold text-white transition hover:bg-nb-clay-dark">
                 Request appointment
               </button>
+              {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
               {submitted && (
-                <p className="mt-3 rounded-full bg-status-ok-bg px-4 py-2 text-sm font-medium text-status-ok">
-                  Appointment request sent successfully.
+                <p className="mt-3 rounded-2xl bg-status-ok-bg px-4 py-3 text-sm font-medium text-status-ok">
+                  Appointment request received. Our team will confirm shortly.
                 </p>
               )}
             </div>

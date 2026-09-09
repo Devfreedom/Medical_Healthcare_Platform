@@ -1,4 +1,4 @@
-import { Camera, Mic, PhoneOff, Video } from 'lucide-react';
+import { Camera, Mic, PhoneOff } from 'lucide-react';
 
 export default function TelehealthView() {
   return (
