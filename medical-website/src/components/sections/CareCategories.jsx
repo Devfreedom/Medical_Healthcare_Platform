@@ -25,7 +25,7 @@ const tintMap = {
 
 export default function CareCategories() {
   return (
-    <section className="mx-auto max-w-content px-4 py-16 sm:px-6 lg:px-8">
+    <section id="care-categories" className="mx-auto max-w-content px-4 py-16 sm:px-6 lg:px-8">
       <div className="mb-10 text-center">
         <h2 className="font-serif text-4xl tracking-[-0.04em] text-nb-teal sm:text-5xl">
           Comprehensive Care for Every Stage of Life
