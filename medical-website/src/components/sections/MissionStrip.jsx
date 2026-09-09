@@ -38,7 +38,7 @@ export default function MissionStrip() {
             ))}
           </div>
 
-          <button type="button" className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-full border border-nb-teal px-6 py-3 font-semibold text-nb-teal transition hover:-translate-y-0.5 hover:bg-nb-teal hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nb-teal">
+          <button type="button" className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-full border border-nb-teal px-6 py-3 font-semibold text-nb-teal transition hover:-translate-y-0.5 hover:bg-nb-teal hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nb-teal">
             Explore Our Story
             <ArrowRight className="h-4 w-4" />
           </button>
