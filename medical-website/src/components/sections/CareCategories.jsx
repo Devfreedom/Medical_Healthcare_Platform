@@ -39,7 +39,7 @@ export default function CareCategories() {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {categories.map(({ id, title, description, tint, icon }) => {
+        {categories.map(({ id, title, description, tint }) => {
           const palette = tintMap[tint];
           const Icon = palette.icon;
 
