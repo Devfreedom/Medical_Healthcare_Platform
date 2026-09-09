@@ -17,29 +17,67 @@ const trustIndicators = [
 export default function Hero() {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
+
+  const validateField = (name, values) => {
+    const today = new Date().toISOString().slice(0, 10);
+
+    switch (name) {
+      case 'fullName':
+        return values.fullName.trim() ? '' : 'Please enter your full name.';
+      case 'email':
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)
+          ? ''
+          : 'Please enter a valid email address.';
+      case 'service':
+        return values.service ? '' : 'Please select a service.';
+      case 'appointmentDate':
+        return values.appointmentDate && values.appointmentDate > today
+          ? ''
+          : 'Please choose a future appointment date.';
+      default:
+        return '';
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: '' }));
+    const nextForm = { ...form, [name]: value };
+
+    setForm(nextForm);
     setSubmitted(false);
+
+    if (touched[name]) {
+      const nextError = validateField(name, nextForm);
+      setErrors((prev) => ({ ...prev, [name]: nextError }));
+    }
+  };
+
+  const handleBlur = (event) => {
+    const { name, value } = event.target;
+    const nextForm = { ...form, [name]: value };
+
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, nextForm) }));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const nextTouched = {
+      fullName: true,
+      email: true,
+      service: true,
+      appointmentDate: true,
+    };
     const nextErrors = {};
-    const today = new Date().toISOString().slice(0, 10);
 
-    if (!form.fullName.trim()) nextErrors.fullName = 'Please enter your full name.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      nextErrors.email = 'Please enter a valid email address.';
-    }
-    if (!form.service) nextErrors.service = 'Please select a service.';
-    if (!form.appointmentDate || form.appointmentDate <= today) {
-      nextErrors.appointmentDate = 'Please choose a future appointment date.';
-    }
+    Object.keys(nextTouched).forEach((field) => {
+      const message = validateField(field, form);
+      if (message) nextErrors[field] = message;
+    });
 
+    setTouched(nextTouched);
     setErrors(nextErrors);
     setSubmitted(Object.keys(nextErrors).length === 0);
   };
@@ -87,25 +125,25 @@ export default function Hero() {
           <form id="hero-booking-form" onSubmit={handleSubmit} noValidate className="space-y-4">
             <div>
               <label htmlFor="hero-full-name" className="mb-2 block text-sm font-medium text-nb-ink">Full name</label>
-              <input id="hero-full-name" name="fullName" type="text" value={form.fullName} onChange={handleChange} placeholder="Enter your full name" aria-invalid={Boolean(errors.fullName)} aria-describedby={errors.fullName ? 'hero-full-name-error' : undefined} className={`w-full rounded-xl border bg-nb-paper px-4 py-3 text-sm text-nb-ink outline-none transition focus:border-nb-teal focus:ring-2 focus:ring-nb-teal/10 ${errors.fullName ? 'border-status-danger' : 'border-nb-line'}`} />
-              {errors.fullName && <p id="hero-full-name-error" className="mt-1.5 text-sm text-status-danger">{errors.fullName}</p>}
+              <input id="hero-full-name" name="fullName" type="text" value={form.fullName} onChange={handleChange} onBlur={handleBlur} placeholder="Enter your full name" aria-invalid={Boolean(errors.fullName)} aria-describedby={errors.fullName ? 'hero-full-name-error' : undefined} className={`w-full rounded-xl border bg-nb-paper px-4 py-3 text-sm text-nb-ink outline-none transition focus:border-nb-teal focus:ring-2 focus:ring-nb-teal/10 ${errors.fullName ? 'border-status-danger' : 'border-nb-line'}`} />
+              {touched.fullName && errors.fullName && <p id="hero-full-name-error" className="mt-1.5 text-sm text-status-danger">{errors.fullName}</p>}
             </div>
             <div>
               <label htmlFor="hero-email" className="mb-2 block text-sm font-medium text-nb-ink">Email address</label>
-              <input id="hero-email" name="email" type="email" value={form.email} onChange={handleChange} placeholder="you@example.com" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'hero-email-error' : undefined} className={`w-full rounded-xl border bg-nb-paper px-4 py-3 text-sm text-nb-ink outline-none transition focus:border-nb-teal focus:ring-2 focus:ring-nb-teal/10 ${errors.email ? 'border-status-danger' : 'border-nb-line'}`} />
-              {errors.email && <p id="hero-email-error" className="mt-1.5 text-sm text-status-danger">{errors.email}</p>}
+              <input id="hero-email" name="email" type="email" value={form.email} onChange={handleChange} onBlur={handleBlur} placeholder="you@example.com" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? 'hero-email-error' : undefined} className={`w-full rounded-xl border bg-nb-paper px-4 py-3 text-sm text-nb-ink outline-none transition focus:border-nb-teal focus:ring-2 focus:ring-nb-teal/10 ${errors.email ? 'border-status-danger' : 'border-nb-line'}`} />
+              {touched.email && errors.email && <p id="hero-email-error" className="mt-1.5 text-sm text-status-danger">{errors.email}</p>}
             </div>
             <div>
               <label htmlFor="hero-service" className="mb-2 block text-sm font-medium text-nb-ink">Service</label>
-              <select id="hero-service" name="service" value={form.service} onChange={handleChange} aria-invalid={Boolean(errors.service)} aria-describedby={errors.service ? 'hero-service-error' : undefined} className={`w-full rounded-xl border bg-nb-paper px-4 py-3 text-sm text-nb-ink outline-none transition focus:border-nb-teal focus:ring-2 focus:ring-nb-teal/10 ${errors.service ? 'border-status-danger' : 'border-nb-line'}`}>
+              <select id="hero-service" name="service" value={form.service} onChange={handleChange} onBlur={handleBlur} aria-invalid={Boolean(errors.service)} aria-describedby={errors.service ? 'hero-service-error' : undefined} className={`w-full rounded-xl border bg-nb-paper px-4 py-3 text-sm text-nb-ink outline-none transition focus:border-nb-teal focus:ring-2 focus:ring-nb-teal/10 ${errors.service ? 'border-status-danger' : 'border-nb-line'}`}>
                 <option value="">Select a service</option><option value="primary-care">Primary care</option><option value="specialist-care">Specialist care</option><option value="wellness">Wellness and prevention</option><option value="telehealth">Telehealth</option>
               </select>
-              {errors.service && <p id="hero-service-error" className="mt-1.5 text-sm text-status-danger">{errors.service}</p>}
+              {touched.service && errors.service && <p id="hero-service-error" className="mt-1.5 text-sm text-status-danger">{errors.service}</p>}
             </div>
             <div>
               <label htmlFor="hero-appointment-date" className="mb-2 block text-sm font-medium text-nb-ink">Preferred date</label>
-              <input id="hero-appointment-date" name="appointmentDate" type="date" min={new Date().toISOString().slice(0, 10)} value={form.appointmentDate} onChange={handleChange} aria-invalid={Boolean(errors.appointmentDate)} aria-describedby={errors.appointmentDate ? 'hero-date-error' : undefined} className={`w-full rounded-xl border bg-nb-paper px-4 py-3 text-sm text-nb-ink outline-none transition focus:border-nb-teal focus:ring-2 focus:ring-nb-teal/10 ${errors.appointmentDate ? 'border-status-danger' : 'border-nb-line'}`} />
-              {errors.appointmentDate && <p id="hero-date-error" className="mt-1.5 text-sm text-status-danger">{errors.appointmentDate}</p>}
+              <input id="hero-appointment-date" name="appointmentDate" type="date" min={new Date().toISOString().slice(0, 10)} value={form.appointmentDate} onChange={handleChange} onBlur={handleBlur} aria-invalid={Boolean(errors.appointmentDate)} aria-describedby={errors.appointmentDate ? 'hero-date-error' : undefined} className={`w-full rounded-xl border bg-nb-paper px-4 py-3 text-sm text-nb-ink outline-none transition focus:border-nb-teal focus:ring-2 focus:ring-nb-teal/10 ${errors.appointmentDate ? 'border-status-danger' : 'border-nb-line'}`} />
+              {touched.appointmentDate && errors.appointmentDate && <p id="hero-date-error" className="mt-1.5 text-sm text-status-danger">{errors.appointmentDate}</p>}
             </div>
             <button type="submit" className="min-h-11 w-full rounded-full bg-nb-clay px-6 py-3 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-nb-clay-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nb-teal">Book an Appointment</button>
             {submitted && <p role="status" className="rounded-2xl bg-status-ok-bg px-4 py-3 text-sm leading-6 text-status-ok">Appointment request received. Our team will reach out shortly.</p>}
