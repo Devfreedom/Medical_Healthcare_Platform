@@ -2,6 +2,30 @@
 
 @import 'tailwindcss';
 
+@theme {
+  --color-nb-ink: #132A2C;
+  --color-nb-teal: #0F3D3E;
+  --color-nb-teal-dark: #0A2B2C;
+  --color-nb-sage: #6B8F7A;
+  --color-nb-sand: #F2EFE6;
+  --color-nb-paper: #FBFAF6;
+  --color-nb-clay: #B85C38;
+  --color-nb-clay-dark: #9A492C;
+  --color-nb-line: #DCD6C6;
+
+  --color-pastel-tan: #F3E4C8;
+  --color-pastel-tan-ink: #8A6A2F;
+  --color-pastel-pink: #F6DEE3;
+  --color-pastel-pink-ink: #A24C63;
+  --color-pastel-blue: #DCEAF3;
+  --color-pastel-blue-ink: #3E6E8E;
+  --color-pastel-green: #DEEBE1;
+  --color-pastel-green-ink: #3E7A57;
+
+  --font-serif: 'Source Serif Pro', Georgia, serif;
+  --font-sans: -apple-system, 'Segoe UI', Inter, Helvetica, sans-serif;
+}
+
 :root {
   font-family: -apple-system, 'Segoe UI', Inter, Helvetica, sans-serif;
   line-height: 1.5;
