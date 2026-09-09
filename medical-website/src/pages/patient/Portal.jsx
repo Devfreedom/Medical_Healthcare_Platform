@@ -38,7 +38,7 @@ const pageMap = {
   profile: ProfileView,
 };
 
-export default function Portal() {
+export default function Portal({ onBack }) {
   const [activePage, setActivePage] = useState('dashboard');
 
   const ActiveView = useMemo(() => pageMap[activePage], [activePage]);
@@ -62,6 +62,7 @@ export default function Portal() {
             </div>
             <button
               type="button"
+              onClick={onBack}
               className="inline-flex items-center gap-2 rounded-full border border-nb-line bg-white px-4 py-2 text-sm font-medium text-nb-teal transition hover:bg-nb-sand"
             >
               <ArrowLeft className="h-4 w-4" />
