@@ -2,25 +2,29 @@ export const categories = [
   {
     id: 1,
     title: 'General Consultation',
-    description: 'Personalized care plans to support your everyday health and wellness goals.',
+    description: 'Personalized care for your everyday healthcare needs.',
     tint: 'tan',
+    icon: 'consultation',
   },
   {
     id: 2,
     title: 'Preventive Care',
-    description: 'Routine screenings and proactive care designed to keep you feeling your best.',
+    description: 'Stay ahead of health concerns with proactive care and guidance.',
     tint: 'pink',
+    icon: 'preventive',
   },
   {
     id: 3,
     title: 'Emergency Support',
-    description: 'Fast, reassuring guidance for urgent concerns and time-sensitive care needs.',
+    description: 'Get timely support when you need urgent medical attention.',
     tint: 'blue',
+    icon: 'emergency',
   },
   {
     id: 4,
     title: 'Specialist Visits',
-    description: 'Access experienced expertise for advanced evaluation, treatment, and follow-up.',
+    description: 'Connect with specialists for focused and personalized care.',
     tint: 'green',
+    icon: 'specialist',
   },
 ];
