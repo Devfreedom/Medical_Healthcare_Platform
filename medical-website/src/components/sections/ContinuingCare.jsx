@@ -67,9 +67,9 @@ export default function ContinuingCare() {
       className="w-full bg-[#0A2E28]"
     >
       <div className="mx-auto max-w-[1180px] px-4 py-20 sm:px-6 sm:py-24 lg:py-32">
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-16">
-          {/* LEFT — 42% */}
-          <div className="lg:w-[42%]">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-[45fr_55fr] md:gap-x-12 lg:grid-cols-[42fr_58fr] lg:gap-x-16 lg:gap-y-10">
+          {/* HEADLINE BLOCK — left 42% on desktop */}
+          <div className="lg:col-start-1 lg:row-start-1">
             <p
               className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#8EF5D0]"
               style={reveal(0)}
@@ -88,8 +88,30 @@ export default function ContinuingCare() {
             >
               Northbridge helps people stay connected to the right care, guidance, and follow-up as their needs change.
             </p>
+          </div>
 
-            <ul className="mt-10">
+          {/* FEATURE IMAGE — right 58% on desktop, after copy on mobile */}
+          <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" style={reveal(200)}>
+            <figure className="group">
+              <div className="overflow-hidden rounded-[12px]">
+                <img
+                  src={IMAGE_URL}
+                  alt="A clinician speaking with a parent and child during a care conversation"
+                  loading="lazy"
+                  className="aspect-[16/10] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
+                />
+              </div>
+              <figcaption
+                className="mt-3 max-w-[420px] text-[11px] leading-5 text-white/60 transition-opacity duration-300 group-hover:opacity-90"
+              >
+                A Northbridge care conversation — guidance that continues between and beyond visits.
+              </figcaption>
+            </figure>
+          </div>
+
+          {/* SUPPORTING PRINCIPLES — left column on desktop, after image on mobile */}
+          <div className="lg:col-start-1 lg:row-start-2">
+            <ul>
               {PRINCIPLES.map((item, i) => (
                 <li
                   key={item.title}
@@ -111,25 +133,6 @@ export default function ContinuingCare() {
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* RIGHT — 58% */}
-          <div className="lg:w-[58%]" style={reveal(200)}>
-            <figure className="group">
-              <div className="overflow-hidden rounded-[12px]">
-                <img
-                  src={IMAGE_URL}
-                  alt="A clinician speaking with a parent and child during a care conversation"
-                  loading="lazy"
-                  className="aspect-[16/10] w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-                />
-              </div>
-              <figcaption
-                className="mt-3 max-w-[420px] text-[11px] leading-5 text-white/60 transition-opacity duration-300 group-hover:opacity-90"
-              >
-                A Northbridge care conversation — guidance that continues between and beyond visits.
-              </figcaption>
-            </figure>
           </div>
         </div>
       </div>
