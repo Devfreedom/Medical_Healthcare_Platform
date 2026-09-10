@@ -1,9 +1,10 @@
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
 import Hero from '../../components/sections/Hero';
+import CareCategories from '../../components/sections/CareCategories';
+import DirectAccessBento from '../../components/sections/DirectAccessBento';
 import EditorialIntro from '../../components/sections/EditorialIntro';
 import MissionStrip from '../../components/sections/MissionStrip';
-import CareCategories from '../../components/sections/CareCategories';
 import HowItWorks from '../../components/sections/HowItWorks';
 import Outcomes from '../../components/sections/Outcomes';
 import Testimonials from '../../components/sections/Testimonials';
@@ -16,6 +17,7 @@ export default function Home() {
       <main>
         <Hero />
         <CareCategories />
+        <DirectAccessBento />
         <EditorialIntro />
         <MissionStrip />
         <Outcomes />
