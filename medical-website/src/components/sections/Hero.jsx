@@ -36,7 +36,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section id="top" aria-label="Northbridge hero" className="relative h-[90vh] min-h-[560px] w-full overflow-hidden bg-[#0A2E28]">
+    <section id="top" aria-label="Northbridge hero" className="relative h-[92svh] min-h-[560px] w-full overflow-hidden bg-[#0A2E28] sm:h-[90vh]">
       <div className="absolute inset-0" aria-hidden="true">
         {heroSlides.map((slide, index) => (
           <img
@@ -57,7 +57,7 @@ export default function Hero() {
 
       <div className="absolute inset-0 z-10">
         <div className="relative h-full w-full">
-          <div className="absolute left-[8%] top-[28%] z-20 max-w-[560px] pr-6">
+          <div className="absolute left-[8%] right-6 top-[24%] z-20 max-w-[560px] sm:top-[28%] sm:pr-6">
             <h1 className="font-serif text-[clamp(2.5rem,5.2vw,64px)] leading-[1.05] text-white">
               Evidence-based women&apos;s and family <em className="italic">healthcare</em>
             </h1>
@@ -129,7 +129,7 @@ export default function Hero() {
             <circle cx="498" cy="70" r="4" fill="#5AC8B2" />
           </svg>
 
-          <p aria-live="polite" className="absolute bottom-10 right-10 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70">
+          <p aria-live="polite" className="absolute bottom-6 right-6 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70 sm:bottom-10 sm:right-10">
             {heroSlides[activeSlide].label}
           </p>
         </div>
