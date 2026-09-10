@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, CalendarDays, Check, CheckCircle2, LockKeyhole, ShieldCheck } from 'lucide-react';
+import { ArrowRight, CalendarDays, Check, ShieldCheck, Sparkles, Video } from 'lucide-react';
 
 const initialForm = {
   fullName: '',
@@ -8,10 +8,11 @@ const initialForm = {
   appointmentDate: '',
 };
 
-const trustIndicators = [
-  { icon: ShieldCheck, label: 'Trusted healthcare professionals' },
-  { icon: LockKeyhole, label: 'Secure patient information' },
-  { icon: CheckCircle2, label: 'Patient-centered care' },
+const audiencePills = ['For Employers', 'For Health Plans', 'For Individuals'];
+const statItems = [
+  { value: '30+', label: 'provider specialties' },
+  { value: '24/7', label: 'virtual care access' },
+  { value: '28M', label: 'lives supported' },
 ];
 
 export default function Hero() {

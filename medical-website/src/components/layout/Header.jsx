@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 
 const navItems = [
-  { label: 'About', href: '#about' },
-  { label: 'Services', href: '#care-categories' },
-  // Stories and Team do not have dedicated sections/pages yet, so keep them on the homepage until those destinations are implemented.
-  { label: 'Stories', href: '/' },
-  { label: 'Team', href: '/' },
+  { label: 'Why Us', href: '#about' },
+  { label: 'Programs', href: '#care-categories' },
+  { label: 'How it works', href: '#how-it-works' },
+  { label: 'Stories', href: '#stories' },
 ];
 
-const mobileDrawerItems = [...navItems, { label: 'Contact us', href: '#contact-section' }];
+const mobileDrawerItems = [...navItems, { label: 'Get care', href: '#appointment-form' }];
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,34 +33,50 @@ export default function Header() {
 
   return (
     <>
+      <div className="bg-maven-pine-dark text-center text-[13px] font-medium text-maven-paper">
+        <div className="mx-auto flex max-w-content items-center justify-center gap-2 px-4 py-2.5 sm:px-6 lg:px-8">
+          <span className="hidden rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.14em] sm:inline">New</span>
+          <p className="truncate">
+            Now offering 24/7 virtual care + same-week appointments
+            <a href="#appointment-form" className="ml-2 inline-flex items-center gap-1 font-semibold underline decoration-maven-clay decoration-2 underline-offset-4">
+              Get care
+            </a>
+          </p>
+        </div>
+      </div>
+
       <div
-        className={`fixed inset-0 z-40 bg-nb-ink/20 transition-opacity duration-300 lg:hidden ${isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`fixed inset-0 z-40 bg-maven-pine-dark/30 transition-opacity duration-300 lg:hidden ${isOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
         aria-hidden={!isOpen}
         onClick={closeDrawer}
       />
 
-      <header className="sticky top-0 z-50 border-b border-nb-line bg-nb-paper/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-content items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-nb-teal text-sm font-semibold text-white">
-              NH
+      <header className="sticky top-0 z-50 border-b border-maven-line/70 bg-maven-paper/95 backdrop-blur-md">
+        <div className="mx-auto flex max-w-content items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
+          <a href="#top" className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-maven-pine font-serif text-sm font-bold text-white">
+              N
             </div>
-            <div>
-              <div className="text-lg font-bold tracking-tight text-nb-teal">Northbridge Health</div>
+            <div className="leading-tight">
+              <div className="font-serif text-[19px] font-semibold tracking-tight text-maven-pine">Northbridge Health</div>
+              <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-maven-moss">Women + Family Care</div>
             </div>
-          </div>
+          </a>
 
-          <nav className="hidden items-center gap-8 text-sm font-medium text-nb-ink/80 lg:flex">
+          <nav className="hidden items-center gap-7 text-[15px] font-medium text-maven-pine/80 lg:flex">
             {navItems.map(({ label, href }) => (
-              <a key={label} href={href} className="transition hover:text-nb-teal">
+              <a key={label} href={href} className="transition hover:text-maven-pine">
                 {label}
               </a>
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
-            <a href="#contact-section" className="hidden rounded-full bg-nb-teal px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-nb-ink sm:inline-flex">
-              Contact us
+          <div className="flex items-center gap-2.5">
+            <a href="#contact-section" className="hidden text-sm font-semibold text-maven-pine underline-offset-4 hover:underline md:inline-flex">
+              Log in
+            </a>
+            <a href="#appointment-form" className="hidden rounded-full bg-maven-clay px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(232,93,63,0.3)] transition hover:-translate-y-0.5 hover:bg-maven-clay-dark sm:inline-flex">
+              Get care
             </a>
             <button
               type="button"
@@ -68,7 +84,7 @@ export default function Header() {
               aria-expanded={isOpen}
               aria-controls="mobile-navigation-drawer"
               onClick={() => setIsOpen((open) => !open)}
-              className="inline-flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full border border-nb-line bg-white text-nb-teal lg:hidden"
+              className="inline-flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded-full border border-maven-line bg-white text-maven-pine lg:hidden"
             >
               <span className="block h-0.5 w-5 rounded-full bg-current" />
               <span className="block h-0.5 w-5 rounded-full bg-current" />
@@ -83,32 +99,37 @@ export default function Header() {
         role="dialog"
         aria-modal="true"
         aria-label="Mobile navigation"
-        className={`fixed right-0 top-0 z-50 h-full w-[82vw] max-w-[320px] border-l border-nb-line bg-nb-paper p-5 shadow-[0_20px_40px_rgba(19,42,44,0.18)] transition-transform duration-300 ease-out lg:hidden ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed right-0 top-0 z-50 h-full w-[84vw] max-w-[340px] border-l border-maven-line bg-maven-paper p-5 shadow-[0_20px_40px_rgba(6,42,32,0.22)] transition-transform duration-300 ease-out lg:hidden ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         <div className="mb-6 flex items-center justify-between">
-          <div className="text-base font-semibold text-nb-teal">Menu</div>
+          <div className="font-serif text-lg font-semibold text-maven-pine">Menu</div>
           <button
             type="button"
             aria-label="Close menu"
             onClick={closeDrawer}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-nb-line bg-white text-lg text-nb-ink"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-maven-line bg-white text-lg text-maven-pine"
           >
             ×
           </button>
         </div>
 
-        <nav className="flex flex-col gap-2 text-base font-medium text-nb-ink" aria-label="Mobile navigation links">
+        <nav className="flex flex-col gap-1.5 text-[16px] font-medium text-maven-pine" aria-label="Mobile navigation links">
           {mobileDrawerItems.map(({ label, href }) => (
             <a
               key={label}
               href={href}
               onClick={closeDrawer}
-              className="rounded-xl px-3 py-2.5 transition hover:bg-nb-sand hover:text-nb-teal"
+              className="rounded-2xl px-4 py-3 transition hover:bg-maven-sand"
             >
               {label}
             </a>
           ))}
         </nav>
+
+        <a href="#appointment-form" onClick={closeDrawer} className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-maven-clay px-6 py-3.5 text-sm font-semibold text-white">
+          Get care <ArrowRight className="h-4 w-4" />
+        </a>
+        <p className="mt-4 text-center text-xs leading-5 text-maven-pine/60">Free with many employers + health plans</p>
       </aside>
     </>
   );
