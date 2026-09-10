@@ -3,6 +3,7 @@ import Footer from '../../components/layout/Footer';
 import Hero from '../../components/sections/Hero';
 import CareCategories from '../../components/sections/CareCategories';
 import DirectAccessBento from '../../components/sections/DirectAccessBento';
+import CinematicOutcomes from '../../components/sections/CinematicOutcomes';
 import EditorialIntro from '../../components/sections/EditorialIntro';
 import MissionStrip from '../../components/sections/MissionStrip';
 import HowItWorks from '../../components/sections/HowItWorks';
@@ -18,6 +19,7 @@ export default function Home() {
         <Hero />
         <CareCategories />
         <DirectAccessBento />
+        <CinematicOutcomes />
         <EditorialIntro />
         <MissionStrip />
         <Outcomes />

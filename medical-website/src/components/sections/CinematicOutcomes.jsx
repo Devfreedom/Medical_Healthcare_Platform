@@ -115,3 +115,48 @@ export default function CinematicOutcomes() {
     return () => observers.forEach((obs) => obs.disconnect());
   }, []);
 
+  return (
+    <div>
+      {/* SCENE 1 — cinematic family image */}
+      <section aria-label="Northbridge family care" className="relative w-full overflow-hidden bg-[#06231E]">
+        <div ref={imageRef} className="h-[58vh] min-h-[380px] w-full sm:h-[64vh] lg:h-[70vh]">
+          <img
+            src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?auto=format&fit=crop&w=2000&q=85"
+            alt="Parent and child laughing together at home"
+            loading="lazy"
+            className="h-full w-full object-cover object-[center_30%] will-change-transform"
+            style={{
+              transform: panStarted && !reduced ? 'translateY(-3.5%)' : 'translateY(0)',
+              transition: 'transform 6000ms cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          />
+        </div>
+      </section>
+
+      {/* SCENE 2 — cream outcomes / evidence */}
+      <section
+        ref={outcomesRef}
+        aria-label="Northbridge evidence and outcomes"
+        className="bg-[#FFFBF4]"
+      >
+        <div className="mx-auto max-w-[1180px] px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:pb-28 lg:pt-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="font-serif text-[34px] leading-[1.06] tracking-[-0.015em] text-[#0A2E28] sm:text-[48px] lg:text-[56px]">
+              Better care can lead to <em className="italic">better outcomes.</em>
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-[14px] leading-6 text-[#0A2E28]/70 sm:text-[15px]">
+              By guiding people through more intuitive paths to care, we aim to make healthcare
+              easier to navigate and support better experiences for every family.
+            </p>
+          </div>
+
+          <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-8 lg:mt-16 lg:grid-cols-4 lg:gap-6">
+            {OUTCOMES.map((item) => (
+              <OutcomeRing key={item.id} item={item} active={arcsActive} reduced={reduced} />
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
