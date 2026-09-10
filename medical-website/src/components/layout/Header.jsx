@@ -45,7 +45,7 @@ export default function Header() {
   };
   const scheduleClose = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setOpenDropdown(null), 120);
+    closeTimer.current = setTimeout(() => setOpenDropdown(null), 160);
   };
   const cancelClose = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -87,8 +87,8 @@ export default function Header() {
   return (
     <>
       {announcementVisible && (
-        <div className="relative flex h-10 items-center justify-center bg-[#8ED8F8] px-10 text-center">
-          <p className="truncate text-[12px] font-bold leading-5 tracking-[0.01em] text-[#0A2E28]">
+        <div className="relative flex h-10 items-center justify-center overflow-hidden bg-[#8ED8F8] px-10 text-center">
+          <p className="max-w-[1180px] truncate whitespace-nowrap text-[12px] font-bold leading-5 tracking-[0.01em] text-[#0A2E28]">
             {ANNOUNCEMENT_TEXT}
           </p>
           <button
@@ -108,8 +108,8 @@ export default function Header() {
         onClick={closeDrawer}
       />
 
-      <div className="px-4 sm:px-6">
-        <header className="sticky top-[12px] z-50 mx-auto mt-3 flex h-16 w-[92%] max-w-[1180px] items-center justify-between rounded-[8px] border border-[#E5E7EB] bg-white px-5 shadow-[0_4px_24px_rgba(0,0,0,0.08)] md:w-[80%]">
+      <div className="overflow-visible px-4 sm:px-6">
+        <header className="sticky top-[12px] z-50 mx-auto mt-3 flex h-16 w-[92%] max-w-[1180px] items-center justify-between gap-3 rounded-[8px] border border-[#E5E7EB] bg-white py-0 pl-5 pr-3 shadow-[0_4px_24px_rgba(0,0,0,0.08)] sm:pr-5 md:w-[80%]">
           <a href="#top" aria-label="Northbridge Health — home" className="flex shrink-0 items-center gap-2.5 rounded-lg">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0A3D36] font-serif text-[13px] font-bold text-white">
               N
@@ -156,7 +156,7 @@ export default function Header() {
               <span className="block h-0.5 w-5 rounded-full bg-current" />
               <span className="block h-0.5 w-5 rounded-full bg-current" />
           </button>
-          <div onMouseEnter={cancelClose} onMouseLeave={scheduleClose} className="absolute left-1/2 top-[calc(100%+12px)] hidden -translate-x-1/2 pt-1 transition-all duration-200 ease-out lg:block">
+          <div onMouseEnter={cancelClose} onMouseLeave={scheduleClose} className="absolute left-1/2 top-full hidden w-max max-w-[calc(100vw-3rem)] -translate-x-1/2 pt-3 transition-all duration-200 ease-out lg:block">
             {openDropdown === 'for-you' && (
               <div className="w-[800px] max-w-[calc(100vw-3rem)] rounded-[12px] bg-white p-4 shadow-2xl ring-1 ring-black/5">
                 <div className="flex items-center justify-between px-2 pb-3 pt-1">
