@@ -93,6 +93,7 @@ export default function CinematicOutcomes() {
   const [reduced, setReduced] = useState(false);
   const [panStarted, setPanStarted] = useState(!hasObserver);
   const [arcsActive, setArcsActive] = useState(!hasObserver);
+  const [creamRevealed, setCreamRevealed] = useState(!hasObserver);
   const imageRef = useRef(null);
   const outcomesRef = useRef(null);
 
@@ -115,8 +116,14 @@ export default function CinematicOutcomes() {
     observers.push(imageObs);
 
     const outcomesObs = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => { if (entry.isIntersecting) { setArcsActive(true); outcomesObs.disconnect(); } }),
-      { threshold: 0.3 },
+      (entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setArcsActive(true);
+          setCreamRevealed(true);
+          outcomesObs.disconnect();
+        }
+      }),
+      { threshold: 0.25 },
     );
     if (outcomesRef.current) outcomesObs.observe(outcomesRef.current);
     observers.push(outcomesObs);
@@ -133,16 +140,31 @@ export default function CinematicOutcomes() {
             alt="Parent and child laughing together at home"
             loading="lazy"
             className="h-full w-full object-cover object-[center_30%] will-change-transform"
-            style={{
-              transform: panStarted && !reduced ? 'translateY(-3.5%)' : 'translateY(0)',
-              transition: 'transform 6000ms cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
+            style={
+              reduced
+                ? { transform: 'translateY(0)' }
+                : {
+                    transform: panStarted ? 'translateY(-3.5%)' : 'translateY(0)',
+                    transition: 'transform 6000ms cubic-bezier(0.16, 1, 0.3, 1) 1200ms',
+                  }
+            }
           />
         </div>
       </section>
 
       <section ref={outcomesRef} aria-label="Northbridge evidence and outcomes" className="bg-[#FFFBF4]">
-        <div className="mx-auto max-w-[1180px] px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:pb-28 lg:pt-24">
+        <div
+          className="mx-auto max-w-[1180px] px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:pb-28 lg:pt-24"
+          style={
+            reduced
+              ? undefined
+              : {
+                  opacity: creamRevealed ? 1 : 0,
+                  transform: creamRevealed ? 'translateY(0)' : 'translateY(28px)',
+                  transition: 'opacity 900ms cubic-bezier(0.22, 1, 0.36, 1), transform 900ms cubic-bezier(0.22, 1, 0.36, 1)',
+                }
+          }
+        >
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-serif text-[34px] leading-[1.06] tracking-[-0.015em] text-[#0A2E28] sm:text-[48px] lg:text-[56px]">
               Better care can lead to <em className="italic">better outcomes.</em>
