@@ -5,6 +5,7 @@ import CareCategories from '../../components/sections/CareCategories';
 import DirectAccessBento from '../../components/sections/DirectAccessBento';
 import CinematicOutcomes from '../../components/sections/CinematicOutcomes';
 import AudienceAccordion from '../../components/sections/AudienceAccordion';
+import TrustedMarquee from '../../components/sections/TrustedMarquee';
 import EditorialIntro from '../../components/sections/EditorialIntro';
 import MissionStrip from '../../components/sections/MissionStrip';
 import HowItWorks from '../../components/sections/HowItWorks';
@@ -22,6 +23,7 @@ export default function Home() {
         <DirectAccessBento />
         <CinematicOutcomes />
         <AudienceAccordion />
+        <TrustedMarquee />
         <EditorialIntro />
         <MissionStrip />
         <Outcomes />
