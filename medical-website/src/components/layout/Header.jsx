@@ -1,14 +1,10 @@
-import { useEffect, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowRight, ChevronDown, X } from 'lucide-react';
+import { categories } from '../../data/categories';
 
-const navItems = [
-  { label: 'Why Us', href: '#about' },
-  { label: 'Programs', href: '#care-categories' },
-  { label: 'How it works', href: '#how-it-works' },
-  { label: 'Stories', href: '#stories' },
-];
-
-const mobileDrawerItems = [...navItems];
+const ANNOUNCEMENT_TEXT =
+  'LIVE AMA - SEPT 16 | Countdown to Unbundling: What You Need to Know for 2027 | Register now \u2192';
+const forYouCards = categories.slice(0, 4);
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
