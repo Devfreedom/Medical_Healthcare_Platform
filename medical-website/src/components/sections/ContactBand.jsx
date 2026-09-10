@@ -20,7 +20,7 @@ export default function ContactBand() {
   };
 
   return (
-    <section className="mt-8 overflow-hidden bg-nb-teal-dark pb-14 pt-10 text-white">
+    <section id="contact-section" className="mt-8 overflow-hidden bg-nb-teal-dark pb-14 pt-10 text-white">
       <div className="mx-auto max-w-content px-4 sm:px-6 lg:px-8">
         <div className="grid items-end gap-8 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="rounded-[1.75rem] bg-nb-teal-dark p-4 sm:p-6">

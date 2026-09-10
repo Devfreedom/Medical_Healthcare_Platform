@@ -1,4 +1,9 @@
-const navItems = ['About', 'Services', 'Stories', 'Team'];
+const navItems = [
+  { label: 'About', href: '#about' },
+  { label: 'Services', href: '#care-categories' },
+  { label: 'Stories', href: '#about' },
+  { label: 'Team', href: '#care-categories' },
+];
 
 export default function Header() {
   return (
@@ -14,17 +19,17 @@ export default function Header() {
         </div>
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-nb-ink/80 lg:flex">
-          {navItems.map((item) => (
-            <a key={item} href="#" className="transition hover:text-nb-teal">
-              {item}
+          {navItems.map(({ label, href }) => (
+            <a key={label} href={href} className="transition hover:text-nb-teal">
+              {label}
             </a>
           ))}
         </nav>
 
         <div className="flex items-center gap-3">
-          <button type="button" className="hidden rounded-full bg-nb-teal px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-nb-ink sm:inline-flex">
+          <a href="#contact-section" className="hidden rounded-full bg-nb-teal px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-nb-ink sm:inline-flex">
             Contact us
-          </button>
+          </a>
           <button
             type="button"
             aria-label="Open menu"
@@ -39,14 +44,14 @@ export default function Header() {
 
       <div className="border-t border-nb-line px-4 py-3 lg:hidden">
         <div className="flex flex-col gap-3 text-sm font-medium text-nb-ink">
-          {navItems.map((item) => (
-            <a key={item} href="#" className="py-1 hover:text-nb-teal">
-              {item}
+          {navItems.map(({ label, href }) => (
+            <a key={label} href={href} className="py-1 hover:text-nb-teal">
+              {label}
             </a>
           ))}
-          <button type="button" className="mt-2 rounded-full bg-nb-teal px-5 py-2.5 font-semibold text-white">
+          <a href="#contact-section" className="mt-2 rounded-full bg-nb-teal px-5 py-2.5 font-semibold text-white text-center">
             Contact us
-          </button>
+          </a>
         </div>
       </div>
     </header>

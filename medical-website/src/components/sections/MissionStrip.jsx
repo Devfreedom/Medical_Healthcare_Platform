@@ -2,7 +2,7 @@ import { ArrowRight, HeartHandshake, ShieldCheck, Stethoscope } from 'lucide-rea
 
 export default function MissionStrip() {
   return (
-    <section className="mx-auto max-w-content px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-20">
+    <section id="about" className="mx-auto max-w-content px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-20">
       <div className="grid gap-7 rounded-3xl border border-nb-line bg-white p-5 shadow-[0_16px_36px_rgba(19,42,44,0.05)] sm:p-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-x-14 lg:gap-y-6 lg:p-10">
         <div className="order-1 max-w-xl lg:col-start-2 lg:row-start-1">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-nb-clay">Why Northbridge</p>
