@@ -56,7 +56,9 @@ function OutcomeRing({ item, active, reduced }) {
     return () => cancelAnimationFrame(raf);
   }, [active, reduced, numeric, item.countTo]);
 
-  const centerLabel = numeric ? `${display ?? item.countTo}${item.suffix}` : item.word;
+  const centerLabel = numeric
+    ? `${(reduced ? item.countTo : display) ?? item.countTo}${item.suffix}`
+    : item.word;
 
   return (
     <div className="flex flex-col items-center text-center">
