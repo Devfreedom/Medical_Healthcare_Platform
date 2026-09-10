@@ -36,7 +36,8 @@ export default function Hero() {
   }, []);
 
   return (
-    <section id="top" aria-label="Northbridge hero" className="relative h-[92svh] min-h-[560px] w-full overflow-hidden bg-[#0A2E28] sm:h-[90vh]">
+    <section id="top" aria-label="Northbridge hero" className="w-full bg-[#0A2E28] p-3">
+      <div className="relative h-[92svh] min-h-[560px] w-full overflow-hidden rounded-[16px] sm:h-[90vh] sm:rounded-[24px]">
       <div className="absolute inset-0" aria-hidden="true">
         {heroSlides.map((slide, index) => (
           <img
@@ -52,26 +53,29 @@ export default function Hero() {
             }}
           />
         ))}
-        <div className="absolute inset-0 bg-black/35" />
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(to right, rgba(10,46,40,0.6) 0%, rgba(10,46,40,0.1) 70%)' }}
+        />
       </div>
 
       <div className="absolute inset-0 z-10">
         <div className="relative h-full w-full">
           <div className="absolute left-[8%] right-6 top-[24%] z-20 max-w-[560px] sm:top-[28%] sm:pr-6">
-            <h1 className="font-serif text-[clamp(2.5rem,5.2vw,64px)] leading-[1.05] text-white">
+            <h1 className="font-serif text-[clamp(2.25rem,4.6vw,56px)] font-light leading-[1.05] text-white">
               Evidence-based women&apos;s and family <em className="italic">healthcare</em>
             </h1>
             <p className="mt-4 text-[16px] leading-6 text-white/80">Expert care across every life stage.</p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center" style={{ gap: '12px' }}>
               <a
                 href="#care-categories"
-                className="inline-flex items-center justify-center rounded-[6px] bg-[#7AF0C0] px-5 py-3 text-[14px] font-semibold text-[#0A2E28] transition-all duration-200 hover:scale-105 hover:bg-white"
+                className="inline-flex items-center justify-center rounded-[6px] bg-[#8EF5D0] px-6 py-2.5 text-[14px] font-medium text-[#0A2E28] transition-all duration-200 hover:scale-[1.03] hover:bg-white"
               >
                 Explore platform
               </a>
               <a
                 href="#contact-section"
-                className="inline-flex items-center justify-center rounded-[6px] border border-[#7AF0C0] bg-transparent px-5 py-3 text-[14px] font-semibold text-[#7AF0C0] transition-all duration-200 hover:scale-105 hover:bg-[#7AF0C0]/10"
+                className="inline-flex items-center justify-center rounded-[6px] border border-[#8EF5D0] bg-transparent px-6 py-2.5 text-[14px] font-medium text-[#8EF5D0] transition-all duration-200 hover:scale-[1.03] hover:bg-[#8EF5D0]/10"
               >
                 Get care
               </a>
