@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const PROGRAMS = [
   {
@@ -63,10 +63,20 @@ const PROGRAMS = [
   },
 ];
 
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReduced(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+  return reduced;
+}
+
 export default function Testimonials() {
-  const prefersReduced = useRef(
-    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-  ).current;
+  const prefersReduced = usePrefersReducedMotion();
   const [programIndex, setProgramIndex] = useState(0);
   const [storyIndex, setStoryIndex] = useState(0);
   const [visible, setVisible] = useState(false);
@@ -74,10 +84,6 @@ export default function Testimonials() {
   const story = program.stories[storyIndex];
 
   useEffect(() => {
-    if (prefersReduced) {
-      setVisible(true);
-      return undefined;
-    }
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -113,27 +119,95 @@ export default function Testimonials() {
 
   return (
     <section id="stories" className="bg-maven-cream">
-      <div className="mx-auto max-w-content px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-maven-clay">Member stories</p>
-            <h2 className="mt-3 font-serif text-4xl leading-[1.05] text-maven-pine sm:text-5xl">Trusted by real families</h2>
+      <div className="mx-auto max-w-content px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          {/* Collage */}
+          <div className="relative mx-auto w-full max-w-sm" style={fade(0)}>
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem]">
+              <img
+                src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=1000&fit=crop"
+                alt="Care team reviewing a patient chart"
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div className="absolute -bottom-8 -right-4 hidden w-40 overflow-hidden rounded-[1.5rem] border-4 border-maven-cream shadow-xl sm:block aspect-square">
+              <img
+                src="https://images.unsplash.com/photo-1519689680058-324335c77eba?w=400&h=400&fit=crop"
+                alt="Member holding a newborn"
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
           </div>
-          <a href="#appointment-form" className="inline-flex items-center gap-2 rounded-full border border-maven-pine px-6 py-3 text-sm font-semibold text-maven-pine transition hover:bg-maven-pine hover:text-white">
-            Meet our members →
-          </a>
-        </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {stories.map(({ quote, name, role }) => (
-            <figure key={name} className="flex h-full flex-col rounded-[1.75rem] bg-maven-pine p-7 text-white shadow-[0_20px_40px_rgba(6,42,32,0.2)]">
-              <div className="font-serif text-5xl leading-none text-maven-butter">“</div>
-              <blockquote className="mt-2 flex-1 text-[16px] leading-7 text-white/85">{quote}</blockquote>
-              <figcaption className="mt-6 border-t border-white/15 pt-4">
-                <div className="font-semibold">{name}</div>
-                <div className="text-sm text-white/60">{role}</div>
-              </figcaption>
-            </figure>
-          ))}
+
+          {/* Quote panel */}
+          <div style={fade(150)}>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-maven-clay">Member stories</p>
+            <h2 className="mt-3 font-serif text-4xl leading-[1.05] text-maven-pine sm:text-5xl">
+              Trusted by real families
+            </h2>
+            <div className="mt-8 font-serif text-6xl leading-none text-maven-butter">“</div>
+            <blockquote className="mt-3 min-h-[7rem] font-serif text-2xl leading-[1.4] text-maven-pine sm:text-[1.75rem]">
+              {story.quote}
+            </blockquote>
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-6">
+              {/* Program switcher */}
+              <div className="flex flex-wrap items-center gap-2">
+                {PROGRAMS.map((p, index) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => selectProgram(index)}
+                    aria-pressed={index === programIndex}
+                    className={`rounded-full px-5 py-2.5 text-sm font-semibold transition ${
+                      index === programIndex
+                        ? 'bg-maven-pine text-white'
+                        : 'border border-maven-pine/30 text-maven-pine hover:border-maven-pine'
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              {/* Pagination */}
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => step(-1)}
+                  aria-label="Previous member story"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-maven-pine/30 text-maven-pine transition hover:border-maven-pine"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  onClick={() => step(1)}
+                  aria-label="Next member story"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-maven-pine/30 text-maven-pine transition hover:border-maven-pine"
+                >
+                  →
+                </button>
+                <span className="ml-1 text-sm font-semibold text-maven-pine/60">
+                  {storyIndex + 1} / {program.stories.length}
+                </span>
+              </div>
+            </div>
+            {/* Member identity */}
+            <div className="mt-8 flex items-center gap-4 border-t border-maven-pine/15 pt-6">
+              <img
+                key={story.avatar}
+                src={story.avatar}
+                alt={story.name}
+                className="h-12 w-12 rounded-full object-cover"
+                loading="lazy"
+              />
+              <div>
+                <div className="font-semibold text-maven-pine">{story.name}</div>
+                <div className="text-sm text-maven-pine/60">{story.role}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
