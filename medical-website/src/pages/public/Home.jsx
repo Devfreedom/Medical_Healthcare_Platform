@@ -1,6 +1,7 @@
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
 import Hero from '../../components/sections/Hero';
+import EditorialIntro from '../../components/sections/EditorialIntro';
 import MissionStrip from '../../components/sections/MissionStrip';
 import CareCategories from '../../components/sections/CareCategories';
 import HowItWorks from '../../components/sections/HowItWorks';
@@ -14,6 +15,7 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <EditorialIntro />
         <CareCategories />
         <MissionStrip />
         <Outcomes />

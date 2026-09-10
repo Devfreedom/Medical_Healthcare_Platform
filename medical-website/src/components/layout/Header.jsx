@@ -63,7 +63,10 @@ export default function Header() {
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
-        closeMenu();
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+        if (hideTimer.current) clearTimeout(hideTimer.current);
+        setOpenDropdown(null);
+        setDisplayedDropdown(null);
         setIsOpen(false);
       }
     };
@@ -135,8 +138,8 @@ export default function Header() {
         onClick={closeDrawer}
       />
 
-      <div className="sticky top-[12px] z-50 overflow-visible px-4 sm:px-6">
-        <header className="relative z-50 mx-auto mt-3 flex h-16 w-[92%] max-w-[1180px] items-center justify-between gap-3 rounded-[8px] border border-[#E5E7EB] bg-white py-0 pl-5 pr-3 shadow-[0_4px_24px_rgba(0,0,0,0.08)] sm:pr-5 md:w-[80%]">
+      <div className="sticky top-0 z-50 -mb-[76px] overflow-visible bg-transparent px-4 pt-3 sm:px-6 sm:pt-3">
+        <header className="relative z-50 mx-auto flex h-16 w-[92%] max-w-[1180px] items-center justify-between gap-3 rounded-[8px] border border-[#E5E7EB] bg-white py-0 pl-5 pr-3 shadow-[0_4px_24px_rgba(0,0,0,0.08)] sm:pr-5 md:w-[80%]">
           <a href="#top" aria-label="Northbridge Health — home" className="flex shrink-0 items-center gap-2.5 rounded-lg">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0A3D36] font-serif text-[13px] font-bold text-white">
               N
@@ -149,17 +152,17 @@ export default function Header() {
 
           <nav aria-label="Primary" className="hidden items-center gap-6 lg:flex" onMouseLeave={scheduleClose}>
             <div onMouseEnter={() => openMenu('for-you')}>
-              <button type="button" aria-expanded={openDropdown === 'for-you'} onClick={() => setOpenDropdown(openDropdown === 'for-you' ? null : 'for-you')} className={triggerClass('for-you')}>
+              <button type="button" aria-expanded={openDropdown === 'for-you'} onClick={() => toggleMenu('for-you')} className={triggerClass('for-you')}>
                 For You <ChevronDown className="h-3.5 w-3.5" />
               </button>
             </div>
             <div onMouseEnter={() => openMenu('why')}>
-              <button type="button" aria-expanded={openDropdown === 'why'} onClick={() => setOpenDropdown(openDropdown === 'why' ? null : 'why')} className={triggerClass('why')}>
+              <button type="button" aria-expanded={openDropdown === 'why'} onClick={() => toggleMenu('why')} className={triggerClass('why')}>
                 Why Northbridge <ChevronDown className="h-3.5 w-3.5" />
               </button>
             </div>
             <div onMouseEnter={() => openMenu('resources')}>
-              <button type="button" aria-expanded={openDropdown === 'resources'} onClick={() => setOpenDropdown(openDropdown === 'resources' ? null : 'resources')} className={triggerClass('resources')}>
+              <button type="button" aria-expanded={openDropdown === 'resources'} onClick={() => toggleMenu('resources')} className={triggerClass('resources')}>
                 Resources <ChevronDown className="h-3.5 w-3.5" />
               </button>
             </div>
@@ -192,7 +195,7 @@ export default function Header() {
                 </div>
                 <div className="grid grid-cols-4 gap-3">
                   {forYouCards.map((card, i) => (
-                    <a key={card.id} href="#care-categories" onClick={() => setOpenDropdown(null)} style={{ animationDelay: `${i * 30}ms` }} className="nb-drop-item group relative block h-[220px] w-full max-w-[180px] justify-self-center overflow-hidden rounded-[8px] bg-[#0A2E28] transition-all duration-200 hover:-translate-y-0.5">
+                    <a key={card.id} href="#care-categories" onClick={closeMenu} style={{ animationDelay: `${i * 30}ms` }} className="nb-drop-item group relative block h-[220px] w-full max-w-[180px] justify-self-center overflow-hidden rounded-[8px] bg-[#0A2E28] transition-all duration-200 hover:-translate-y-0.5">
                       <img src={card.image} alt="" aria-hidden="true" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                       <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
                       <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-full bg-[#0A3D36] px-2.5 py-1 text-[10px] font-semibold text-[#7AF0C0]">
@@ -212,7 +215,7 @@ export default function Header() {
                     <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Northbridge</p>
                     <ul>
                       {whyInfoLinks.map((link) => (
-                        <li key={link.label}><a href={link.href} onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
+                        <li key={link.label}><a href={link.href} onClick={closeMenu} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
                       ))}
                     </ul>
                   </div>
@@ -220,7 +223,7 @@ export default function Header() {
                     <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Programs / Care Areas</p>
                     <ul>
                       {whyProgramLinks.map((link) => (
-                        <li key={link.label}><a href={link.href} onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
+                        <li key={link.label}><a href={link.href} onClick={closeMenu} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
                       ))}
                     </ul>
                   </div>
@@ -228,7 +231,7 @@ export default function Header() {
                     <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Program Extensions</p>
                     <ul>
                       {whyExtensionLinks.map((link) => (
-                        <li key={link.label}><a href={link.href} onClick={() => setOpenDropdown(null)} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
+                        <li key={link.label}><a href={link.href} onClick={closeMenu} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
                       ))}
                     </ul>
                   </div>
@@ -242,7 +245,7 @@ export default function Header() {
                     <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Resources</p>
                     <ul>
                       {resourceLinks.map((link) => (
-                        <li key={link.label}><a href={link.href} onClick={() => setOpenDropdown(null)} className="block rounded-xl px-3 py-2.5 hover:bg-[#0B6B5D]/5"><span className="block text-[14px] font-medium text-[#111827]">{link.label}</span><span className="block text-[13px] text-[#6B7280]">{link.desc}</span></a></li>
+                        <li key={link.label}><a href={link.href} onClick={closeMenu} className="block rounded-xl px-3 py-2.5 hover:bg-[#0B6B5D]/5"><span className="block text-[14px] font-medium text-[#111827]">{link.label}</span><span className="block text-[13px] text-[#6B7280]">{link.desc}</span></a></li>
                       ))}
                     </ul>
                   </div>
@@ -250,7 +253,7 @@ export default function Header() {
                     <p className="text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Featured Resource</p>
                     <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=240&q=60" alt="Featured Northbridge care guide" loading="lazy" width={120} height={80} className="mt-3 h-[80px] w-[120px] rounded-[6px] object-cover" />
                     <p className="mt-3 text-[14px] font-semibold leading-6 text-[#111827]">Your guide to coordinated family care</p>
-                    <a href="#about" onClick={() => setOpenDropdown(null)} className="mt-1 inline-flex items-center gap-1 text-[14px] font-semibold text-[#0B6B5D] hover:underline">Read the guide <ArrowRight className="h-3.5 w-3.5" /></a>
+                    <a href="#about" onClick={closeMenu} className="mt-1 inline-flex items-center gap-1 text-[14px] font-semibold text-[#0B6B5D] hover:underline">Read the guide <ArrowRight className="h-3.5 w-3.5" /></a>
                   </div>
                 </div>
               </div>
