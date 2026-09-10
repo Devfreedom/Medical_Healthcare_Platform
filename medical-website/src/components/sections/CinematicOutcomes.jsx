@@ -64,3 +64,54 @@ function OutcomeRing({ item, active, reduced }) {
     </div>
   );
 }
+
+export default function CinematicOutcomes() {
+  const [reduced, setReduced] = useState(false);
+  const [panStarted, setPanStarted] = useState(false);
+  const [arcsActive, setArcsActive] = useState(false);
+  const imageRef = useRef(null);
+  const outcomesRef = useRef(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReduced(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') {
+      setPanStarted(true);
+      setArcsActive(true);
+      return undefined;
+    }
+    const observers = [];
+    const imageObs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setPanStarted(true);
+        });
+      },
+      { threshold: 0.4 },
+    );
+    if (imageRef.current) imageObs.observe(imageRef.current);
+    observers.push(imageObs);
+
+    const outcomesObs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setArcsActive(true);
+            outcomesObs.disconnect();
+          }
+        });
+      },
+      { threshold: 0.3 },
+    );
+    if (outcomesRef.current) outcomesObs.observe(outcomesRef.current);
+    observers.push(outcomesObs);
+
+    return () => observers.forEach((obs) => obs.disconnect());
+  }, []);
+
