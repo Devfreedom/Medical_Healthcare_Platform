@@ -5,18 +5,23 @@ const heroSlides = [
     src: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=2000&q=80',
     alt: '',
     label: 'NORTHBRIDGE CARE / FAMILY (1/3)',
+    vizLabel: 'Care for every stage',
   },
   {
     src: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=2000&q=80',
     alt: '',
     label: 'NORTHBRIDGE CARE / MATERNITY (2/3)',
+    vizLabel: 'Support through maternity',
   },
   {
     src: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?auto=format&fit=crop&w=2000&q=80',
     alt: '',
     label: 'NORTHBRIDGE CARE / EVERY STAGE (3/3)',
+    vizLabel: 'Connected family care',
   },
 ];
+
+const CYCLE_MS = 7800;
 
 export default function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
@@ -31,7 +36,7 @@ export default function Hero() {
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 3000);
+    }, CYCLE_MS);
     return () => clearInterval(timer);
   }, []);
 
@@ -49,7 +54,7 @@ export default function Hero() {
             className="absolute inset-0 h-full w-full object-cover transition-opacity ease-in-out"
             style={{
               opacity: index === activeSlide ? 1 : 0,
-              transitionDuration: '800ms',
+              transitionDuration: '600ms',
             }}
           />
         ))}
@@ -82,56 +87,58 @@ export default function Hero() {
             </div>
           </div>
 
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 500 100"
-            preserveAspectRatio="none"
-            className="absolute bottom-10 left-0 hidden h-[100px] w-[500px] max-w-[60vw] sm:block"
-          >
-            <path
-              d="M0 28 C 90 18, 150 44, 250 34 S 410 20, 500 30"
-              fill="none"
-              stroke="#B8A0D0"
-              strokeOpacity="0.6"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeDasharray="8 10"
-              className="nb-flow-line"
-            />
-            <path
-              d="M0 48 C 100 38, 170 62, 270 52 S 420 40, 500 50"
-              fill="none"
-              stroke="#D4B66A"
-              strokeOpacity="0.6"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeDasharray="8 10"
-              className="nb-flow-line nb-flow-delay-1"
-            />
-            <path
-              d="M0 68 C 110 58, 180 80, 280 70 S 420 60, 500 70"
-              fill="none"
-              stroke="#5AC8B2"
-              strokeOpacity="0.8"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeDasharray="8 10"
-              className="nb-flow-line nb-flow-delay-2"
-            />
-            <path
-              d="M0 86 C 120 76, 190 96, 290 88 S 430 78, 500 88"
-              fill="none"
-              stroke="#0E7C6B"
-              strokeOpacity="0.9"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeDasharray="8 10"
-              className="nb-flow-line nb-flow-delay-3"
-            />
-            <circle cx="498" cy="30" r="4" fill="#B8A0D0" />
-            <circle cx="500" cy="50" r="4" fill="#D4B66A" />
-            <circle cx="498" cy="70" r="4" fill="#5AC8B2" />
-          </svg>
+          <div key={activeSlide} className="absolute bottom-[24px] left-[24px] h-[80px] w-[90%] max-w-[640px]">
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 640 80"
+              preserveAspectRatio="none"
+              className="h-full w-full"
+            >
+              {/* LINE A — purple, idle drift only */}
+              <g className="nb-drift-a">
+                <path
+                  d="M0 18 C 30 12, 60 24, 90 18 S 140 10, 170 16"
+                  fill="none"
+                  stroke="#C9B6D0"
+                  strokeOpacity="0.7"
+                  strokeWidth="0.8"
+                  strokeLinecap="round"
+                />
+                <circle cx="170" cy="16" r="2.5" fill="#F9E07A" />
+              </g>
+              {/* LINE B — gold, idle drift only */}
+              <g className="nb-drift-b">
+                <path
+                  d="M0 38 C 35 32, 70 44, 105 38 S 160 30, 190 36"
+                  fill="none"
+                  stroke="#D4B07A"
+                  strokeOpacity="0.7"
+                  strokeWidth="0.8"
+                  strokeLinecap="round"
+                />
+                <circle cx="190" cy="36" r="2.5" fill="#D6C7FF" />
+              </g>
+              {/* LINE C — main teal, draw / hold / retract */}
+              <path
+                className="nb-teal-path"
+                d="M0 60 Q160 44 320 62 T640 58"
+                fill="none"
+                stroke="#5AC8B2"
+                strokeOpacity="0.9"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeDasharray="700"
+              />
+              <circle className="nb-teal-dot" cx="588" cy="59" r="3" fill="#00D1FF" />
+            </svg>
+            {/* Slide-specific label — revealed at peak */}
+            <div className="nb-teal-label absolute right-0 top-[38%] flex items-center gap-[6px] rounded-full bg-white/10 px-3 py-1 backdrop-blur-md">
+              <span aria-hidden="true" className="h-[20px] w-[20px] shrink-0 rounded-full bg-[#FFB84D]" />
+              <span className="whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.8px] text-white/90">
+                {heroSlides[activeSlide].vizLabel}
+              </span>
+            </div>
+          </div>
 
           <p aria-live="polite" className="absolute bottom-6 right-6 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70 sm:bottom-10 sm:right-10">
             {heroSlides[activeSlide].label}
@@ -139,13 +146,62 @@ export default function Hero() {
         </div>
       </div>
       <style>{`
-        .nb-flow-line { animation: nb-flow 7s linear infinite; }
-        .nb-flow-delay-1 { animation-delay: -1.75s; }
-        .nb-flow-delay-2 { animation-delay: -3.5s; }
-        .nb-flow-delay-3 { animation-delay: -5.25s; }
-        @keyframes nb-flow { to { stroke-dashoffset: -180; } }
-        @media (prefers-reduced-motion: reduce) { .nb-flow-line { animation: none; } }
+        /* Idle drift — 5px left/right, continuous and restrained */
+        .nb-drift-a { animation: nb-drift 6s ease-in-out infinite alternate; }
+        .nb-drift-b { animation: nb-drift 7.5s ease-in-out -2s infinite alternate; }
+        @keyframes nb-drift { from { transform: translateX(-5px); } to { transform: translateX(5px); } }
+
+        /* Teal main line — draw 0-4.4s (peak 92%), hold to 5.6s, retract by 7.5s, reset */
+        .nb-teal-path {
+          stroke-dashoffset: 700;
+          animation: nb-teal-draw 7.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes nb-teal-draw {
+          0%    { stroke-dashoffset: 700; }
+          30%   { stroke-dashoffset: 490; }  /* ~30% drawn at 2.34s */
+          56.4% { stroke-dashoffset: 56; }   /* 92% drawn at 4.4s — PEAK */
+          71.8% { stroke-dashoffset: 56; }   /* hold to 5.6s */
+          96.2% { stroke-dashoffset: 700; }  /* retracted by 7.5s */
+          100%  { stroke-dashoffset: 700; }  /* reset */
+        }
+
+        /* Teal endpoint dot — cyan, turns warm orange at peak, shrinks on retract */
+        .nb-teal-dot {
+          animation: nb-dot-cycle 7.8s linear forwards;
+        }
+        @keyframes nb-dot-cycle {
+          0%     { fill: #00D1FF; r: 3; opacity: 0; }
+          4%     { opacity: 1; }
+          56.4%  { fill: #00D1FF; r: 3; }
+          57%    { fill: #FFB84D; r: 3.5; }  /* peak: warm orange */
+          71.8%  { fill: #FFB84D; r: 3.5; }
+          96.2%  { fill: #FFB84D; r: 1.5; opacity: 0.6; }  /* retract: shrink */
+          100%   { fill: #00D1FF; r: 3; opacity: 0; }
+        }
+
+        /* Slide label — fades/slides in at peak, out on retract */
+        .nb-teal-label {
+          opacity: 0;
+          transform: translateX(-10px);
+          animation: nb-label-cycle 7.8s ease-out forwards;
+        }
+        @keyframes nb-label-cycle {
+          0%     { opacity: 0; transform: translateX(-10px); }
+          56.4%  { opacity: 0; transform: translateX(-10px); }
+          60.2%  { opacity: 1; transform: translateX(0); }   /* 300ms reveal */
+          71.8%  { opacity: 1; transform: translateX(0); }
+          76%    { opacity: 0; transform: translateX(0); }   /* fade out during retract */
+          100%   { opacity: 0; transform: translateX(-10px); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .nb-drift-a, .nb-drift-b, .nb-teal-path, .nb-teal-dot, .nb-teal-label { animation: none; }
+          .nb-teal-path { stroke-dashoffset: 56; }   /* static peak state */
+          .nb-teal-dot { fill: #FFB84D; opacity: 1; }
+          .nb-teal-label { opacity: 1; transform: translateX(0); }
+        }
       `}</style>
+      </div>
     </section>
   );
 }
