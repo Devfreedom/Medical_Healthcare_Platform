@@ -2,26 +2,25 @@ import { ArrowRight, HeartHandshake, ShieldCheck, Stethoscope } from 'lucide-rea
 
 export default function MissionStrip() {
   return (
-    <section id="about" className="mx-auto max-w-content px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-20">
-      <div className="grid gap-7 rounded-3xl border border-nb-line bg-white p-5 shadow-[0_16px_36px_rgba(19,42,44,0.05)] sm:p-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-x-14 lg:gap-y-6 lg:p-10">
-        <div className="order-1 max-w-xl lg:col-start-2 lg:row-start-1">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-nb-clay">Why Northbridge</p>
-          <h2 className="mt-4 font-serif text-4xl leading-[1.02] tracking-[-0.04em] text-nb-teal sm:text-5xl">
-            More than a platform. A partner in your care.
+    <section id="about" className="bg-maven-cream">
+      <div className="mx-auto max-w-content px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+      <div className="grid items-center gap-8 rounded-[2rem] bg-maven-pine p-6 text-white shadow-[0_30px_60px_rgba(6,42,32,0.3)] sm:p-10 lg:grid-cols-2 lg:gap-12 lg:p-12">
+        <div className="max-w-xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-maven-butter">Why Northbridge</p>
+          <h2 className="mt-4 font-serif text-4xl leading-[1.05] tracking-[-0.02em] sm:text-5xl">
+            The most trusted platform for family health
           </h2>
-          <p className="mt-6 text-base leading-7 text-nb-ink/75 sm:text-lg">
-            Healthcare shouldn't feel complicated. Northbridge Health connects you with trusted professionals and personalized care, making it easier to access the support you need at every stage of your journey.
+          <p className="mt-5 text-base leading-7 text-white/75 sm:text-lg">
+            24/7 virtual care, predictive insights, and benefits support — all in one place, backed by clinical research.
           </p>
         </div>
 
-        <div className="order-2 overflow-hidden rounded-2xl border border-nb-line bg-nb-sand lg:col-start-1 lg:row-span-2 lg:row-start-1">
-          <div className="aspect-[4/3] h-full min-h-[250px] lg:aspect-auto">
-            <img
-              src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=1200&q=85"
-              alt="Doctor listening to a patient during a consultation"
-              className="h-full w-full object-cover object-center"
-            />
-          </div>
+        <div className="overflow-hidden rounded-3xl">
+          <img
+            src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=1200&q=85"
+            alt="Doctor listening to a patient during a consultation"
+            className="h-64 w-full object-cover object-center sm:h-80 lg:h-full lg:min-h-[420px]"
+          />
         </div>
 
         <div className="order-3 grid gap-4 sm:grid-cols-3 lg:col-start-2 lg:row-start-2 lg:grid-cols-1">
