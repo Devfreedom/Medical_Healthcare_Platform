@@ -65,10 +65,12 @@ function OutcomeRing({ item, active, reduced }) {
   );
 }
 
+
 export default function CinematicOutcomes() {
+  const hasObserver = typeof IntersectionObserver !== 'undefined';
   const [reduced, setReduced] = useState(false);
-  const [panStarted, setPanStarted] = useState(false);
-  const [arcsActive, setArcsActive] = useState(false);
+  const [panStarted, setPanStarted] = useState(!hasObserver);
+  const [arcsActive, setArcsActive] = useState(!hasObserver);
   const imageRef = useRef(null);
   const outcomesRef = useRef(null);
 
@@ -81,43 +83,27 @@ export default function CinematicOutcomes() {
   }, []);
 
   useEffect(() => {
-    if (typeof IntersectionObserver === 'undefined') {
-      setPanStarted(true);
-      setArcsActive(true);
-      return undefined;
-    }
+    if (!hasObserver) return undefined;
     const observers = [];
     const imageObs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setPanStarted(true);
-        });
-      },
+      (entries) => entries.forEach((entry) => { if (entry.isIntersecting) setPanStarted(true); }),
       { threshold: 0.4 },
     );
     if (imageRef.current) imageObs.observe(imageRef.current);
     observers.push(imageObs);
 
     const outcomesObs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setArcsActive(true);
-            outcomesObs.disconnect();
-          }
-        });
-      },
+      (entries) => entries.forEach((entry) => { if (entry.isIntersecting) { setArcsActive(true); outcomesObs.disconnect(); } }),
       { threshold: 0.3 },
     );
     if (outcomesRef.current) outcomesObs.observe(outcomesRef.current);
     observers.push(outcomesObs);
 
     return () => observers.forEach((obs) => obs.disconnect());
-  }, []);
+  }, [hasObserver]);
 
   return (
     <div>
-      {/* SCENE 1 — cinematic family image */}
       <section aria-label="Northbridge family care" className="relative w-full overflow-hidden bg-[#06231E]">
         <div ref={imageRef} className="h-[58vh] min-h-[380px] w-full sm:h-[64vh] lg:h-[70vh]">
           <img
@@ -133,20 +119,14 @@ export default function CinematicOutcomes() {
         </div>
       </section>
 
-      {/* SCENE 2 — cream outcomes / evidence */}
-      <section
-        ref={outcomesRef}
-        aria-label="Northbridge evidence and outcomes"
-        className="bg-[#FFFBF4]"
-      >
+      <section ref={outcomesRef} aria-label="Northbridge evidence and outcomes" className="bg-[#FFFBF4]">
         <div className="mx-auto max-w-[1180px] px-4 pb-20 pt-16 sm:px-6 sm:pb-24 sm:pt-20 lg:pb-28 lg:pt-24">
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-serif text-[34px] leading-[1.06] tracking-[-0.015em] text-[#0A2E28] sm:text-[48px] lg:text-[56px]">
               Better care can lead to <em className="italic">better outcomes.</em>
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-[14px] leading-6 text-[#0A2E28]/70 sm:text-[15px]">
-              By guiding people through more intuitive paths to care, we aim to make healthcare
-              easier to navigate and support better experiences for every family.
+              By guiding people through more intuitive paths to care, we aim to make healthcare easier to navigate and support better experiences for every family.
             </p>
           </div>
 
