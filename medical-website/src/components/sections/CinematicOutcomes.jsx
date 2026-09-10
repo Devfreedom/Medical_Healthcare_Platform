@@ -78,7 +78,10 @@ function OutcomeRing({ item, active, reduced }) {
             }}
           />
         </svg>
-        <span className="absolute inset-0 flex items-center justify-center px-6 font-serif text-[24px] font-semibold leading-tight text-[#0A2E28]">
+        <span
+          className="absolute inset-0 flex items-center justify-center px-4 font-serif font-semibold leading-tight text-[#0A2E28]"
+          style={{ fontSize: numeric ? '38px' : '22px' }}
+        >
           {centerLabel}
         </span>
       </div>
