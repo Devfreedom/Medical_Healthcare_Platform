@@ -36,6 +36,7 @@ const mobileDrawerItems = [
 export default function Header() {
   const [announcementVisible, setAnnouncementVisible] = useState(true);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [displayedDropdown, setDisplayedDropdown] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const closeTimer = useRef(null);
 
@@ -76,6 +77,15 @@ export default function Header() {
     [],
   );
 
+  useEffect(() => {
+    if (openDropdown) {
+      setDisplayedDropdown(openDropdown);
+      return undefined;
+    }
+    const t = setTimeout(() => setDisplayedDropdown(null), 200);
+    return () => clearTimeout(t);
+  }, [openDropdown]);
+
   const closeDrawer = () => setIsOpen(false);
   const triggerClass = (name) =>
     `relative flex items-center gap-1.5 rounded-sm px-1 py-2 text-[14px] font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0B6B5D] after:absolute after:inset-x-1 after:-bottom-0.5 after:h-0.5 after:origin-left after:transition-transform after:duration-200 ${
@@ -108,8 +118,8 @@ export default function Header() {
         onClick={closeDrawer}
       />
 
-      <div className="overflow-visible px-4 sm:px-6">
-        <header className="sticky top-[12px] z-50 mx-auto mt-3 flex h-16 w-[92%] max-w-[1180px] items-center justify-between gap-3 rounded-[8px] border border-[#E5E7EB] bg-white py-0 pl-5 pr-3 shadow-[0_4px_24px_rgba(0,0,0,0.08)] sm:pr-5 md:w-[80%]">
+      <div className="sticky top-[12px] z-50 overflow-visible px-4 sm:px-6">
+        <header className="relative z-50 mx-auto mt-3 flex h-16 w-[92%] max-w-[1180px] items-center justify-between gap-3 rounded-[8px] border border-[#E5E7EB] bg-white py-0 pl-5 pr-3 shadow-[0_4px_24px_rgba(0,0,0,0.08)] sm:pr-5 md:w-[80%]">
           <a href="#top" aria-label="Northbridge Health — home" className="flex shrink-0 items-center gap-2.5 rounded-lg">
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0A3D36] font-serif text-[13px] font-bold text-white">
               N
@@ -156,8 +166,8 @@ export default function Header() {
               <span className="block h-0.5 w-5 rounded-full bg-current" />
               <span className="block h-0.5 w-5 rounded-full bg-current" />
           </button>
-          <div onMouseEnter={cancelClose} onMouseLeave={scheduleClose} className="absolute left-1/2 top-full hidden w-max max-w-[calc(100vw-3rem)] -translate-x-1/2 pt-3 transition-all duration-200 ease-out lg:block">
-            {openDropdown === 'for-you' && (
+          <div onMouseEnter={cancelClose} onMouseLeave={scheduleClose} onFocus={cancelClose} className={`absolute left-1/2 top-full hidden w-max max-w-[calc(100vw-3rem)] -translate-x-1/2 pt-3 transition-all duration-200 ease-out lg:block ${openDropdown ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0 pointer-events-none'}`}>
+            {displayedDropdown === 'for-you' && (
               <div className="w-[800px] max-w-[calc(100vw-3rem)] rounded-[12px] bg-white p-4 shadow-2xl ring-1 ring-black/5">
                 <div className="flex items-center justify-between px-2 pb-3 pt-1">
                   <p className="font-serif text-[13px] italic text-[#0B6B5D]">Care by life stage</p>
@@ -165,7 +175,7 @@ export default function Header() {
                 </div>
                 <div className="grid grid-cols-4 gap-3">
                   {forYouCards.map((card, i) => (
-                    <a key={card.id} href="#care-categories" onClick={() => setOpenDropdown(null)} style={{ transitionDelay: `${i * 30}ms` }} className="group relative block h-[220px] w-full max-w-[180px] justify-self-center overflow-hidden rounded-[8px] bg-[#0A2E28] transition-all duration-200 hover:-translate-y-0.5">
+                    <a key={card.id} href="#care-categories" onClick={() => setOpenDropdown(null)} style={{ animationDelay: `${i * 30}ms` }} className="nb-drop-item group relative block h-[220px] w-full max-w-[180px] justify-self-center overflow-hidden rounded-[8px] bg-[#0A2E28] transition-all duration-200 hover:-translate-y-0.5">
                       <img src={card.image} alt="" aria-hidden="true" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                       <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
                       <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-full bg-[#0A3D36] px-2.5 py-1 text-[10px] font-semibold text-[#7AF0C0]">
@@ -178,7 +188,7 @@ export default function Header() {
                 </div>
               </div>
             )}
-            {openDropdown === 'why' && (
+            {displayedDropdown === 'why' && (
               <div className="w-[720px] max-w-[calc(100vw-3rem)] rounded-[12px] bg-white p-5 shadow-2xl ring-1 ring-black/5">
                 <div className="grid grid-cols-3 gap-6">
                   <div>
@@ -208,7 +218,7 @@ export default function Header() {
                 </div>
               </div>
             )}
-            {openDropdown === 'resources' && (
+            {displayedDropdown === 'resources' && (
               <div className="w-[640px] max-w-[calc(100vw-3rem)] rounded-[12px] bg-white p-5 shadow-2xl ring-1 ring-black/5">
                 <div className="grid grid-cols-2 gap-6">
                   <div>
@@ -231,6 +241,11 @@ export default function Header() {
           </div>
         </header>
       </div>
+      <style>{`
+        .nb-drop-item { opacity: 0; transform: translateY(6px); animation: nb-drop-in 200ms ease-out forwards; }
+        @keyframes nb-drop-in { to { opacity: 1; transform: translateY(0); } }
+        @media (prefers-reduced-motion: reduce) { .nb-drop-item { opacity: 1; transform: none; animation: none; } }
+      `}</style>
 
       <aside
         id="mobile-navigation-drawer"
