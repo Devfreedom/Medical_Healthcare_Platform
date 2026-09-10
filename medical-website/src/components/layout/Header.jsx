@@ -33,15 +33,14 @@ export default function Header() {
 
   return (
     <>
-      <div className="bg-maven-pine-dark text-center text-[13px] font-medium text-maven-paper">
-        <div className="mx-auto flex max-w-content items-center justify-center gap-2 px-4 py-2.5 sm:px-6 lg:px-8">
-          <span className="hidden rounded-full bg-white/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[0.14em] sm:inline">New</span>
-          <p className="truncate">
-            Now offering 24/7 virtual care + same-week appointments
-            <a href="#appointment-form" className="ml-2 inline-flex items-center gap-1 font-semibold underline decoration-maven-clay decoration-2 underline-offset-4">
-              Get care
-            </a>
+      <div className="bg-nb-teal-dark text-nb-paper">
+        <div className="mx-auto flex max-w-content flex-col items-center justify-center gap-1 px-6 py-2 text-center sm:flex-row sm:justify-between sm:gap-6 sm:px-8 sm:text-left">
+          <p className="min-w-0 text-[12.5px] font-normal leading-5 tracking-[0.02em] text-white/85">
+            Now welcoming new patients across our care programs
           </p>
+          <a href="#care-categories" className="shrink-0 text-[12.5px] font-medium tracking-[0.02em] text-white/85 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white">
+            Explore programs
+          </a>
         </div>
       </div>
 
