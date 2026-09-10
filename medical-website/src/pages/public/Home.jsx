@@ -15,8 +15,8 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
-        <EditorialIntro />
         <CareCategories />
+        <EditorialIntro />
         <MissionStrip />
         <Outcomes />
         <HowItWorks />
