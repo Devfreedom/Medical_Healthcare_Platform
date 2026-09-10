@@ -171,7 +171,17 @@ export default function Header() {
           </nav>
 
           <div className="hidden shrink-0 items-center gap-2.5 lg:flex">
-            <a href="#top" className="rounded-full border border-[#0B6B5D] px-5 py-2 text-[14px] font-medium text-[#0B6B5D] transition hover:bg-[#0B6B5D] hover:text-white">Login</a>
+            <a
+              href="/login"
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/login');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
+              className="rounded-full border border-[#0B6B5D] px-5 py-2 text-[14px] font-medium text-[#0B6B5D] transition hover:bg-[#0B6B5D] hover:text-white"
+            >
+              Login
+            </a>
             <a href="#appointment-form" className="rounded-[6px] bg-[#0B7A69] px-5 py-2 text-[14px] font-semibold text-white transition hover:bg-[#0A3D36]">Get care</a>
           </div>
             <button
