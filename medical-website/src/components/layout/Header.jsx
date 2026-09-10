@@ -1,8 +1,9 @@
 const navItems = [
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#care-categories' },
-  { label: 'Stories', href: '#about' },
-  { label: 'Team', href: '#care-categories' },
+  // Stories and Team do not have dedicated sections/pages yet, so keep them on the homepage until those destinations are implemented.
+  { label: 'Stories', href: '/' },
+  { label: 'Team', href: '/' },
 ];
 
 export default function Header() {
