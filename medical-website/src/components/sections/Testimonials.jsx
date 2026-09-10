@@ -1,21 +1,115 @@
+import { useEffect, useRef, useState } from 'react';
+
+const PROGRAMS = [
+  {
+    id: 'fertility',
+    label: 'Fertility',
+    stories: [
+      {
+        quote:
+          'We had amazing emotional support and saved around what we were going to spend on IVF. The only difference was our care team — and now we are pregnant.',
+        name: 'Han',
+        role: 'Fertility program',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop',
+      },
+      {
+        quote:
+          'From the first call we felt held. Second opinions, treatment planning, someone to talk to at 11pm — it all arrived when we needed it most.',
+        name: 'Mairead',
+        role: 'Fertility program',
+        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=160&h=160&fit=crop',
+      },
+    ],
+  },
+  {
+    id: 'maternity',
+    label: 'Maternity',
+    stories: [
+      {
+        quote:
+          'This is by far the easiest access to specialists I have experienced. It feels so safe to know I can talk to someone when I need to.',
+        name: 'Sarah',
+        role: 'Maternity program',
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=160&h=160&fit=crop',
+      },
+      {
+        quote:
+          'My midwife team answered every question before I even thought to ask it. Pregnancy felt shared instead of solo.',
+        name: 'Amara',
+        role: 'Maternity program',
+        avatar: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=160&h=160&fit=crop',
+      },
+    ],
+  },
+  {
+    id: 'parenting',
+    label: 'Parenting',
+    stories: [
+      {
+        quote:
+          'From second opinions on fertility treatment to newborn care, this has been the constant, trusted companion through a turbulent time.',
+        name: 'Mairead',
+        role: 'Parenting program',
+        avatar: 'https://images.unsplash.com/photo-1554151228-14d9def656e4?w=160&h=160&fit=crop',
+      },
+      {
+        quote:
+          'Night-one pediatric advice at our kitchen table. It turned our hardest weeks into our most supported ones.',
+        name: 'Jordan',
+        role: 'Parenting program',
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=160&h=160&fit=crop',
+      },
+    ],
+  },
+];
+
 export default function Testimonials() {
-  const stories = [
-    {
-      quote: 'We had amazing emotional support and saved around what we were going to spend on IVF. The only difference was our care team — and now we are pregnant.',
-      name: 'Han',
-      role: 'Member, Fertility program',
-    },
-    {
-      quote: 'This is by far the easiest access to specialists I have experienced. It feels so safe to know I can talk to someone when I need to.',
-      name: 'Sarah',
-      role: 'Member, Maternity program',
-    },
-    {
-      quote: 'From second opinions on fertility treatment to newborn care, this has been the constant, trusted companion through a turbulent time.',
-      name: 'Mairead',
-      role: 'Member, Parenting program',
-    },
-  ];
+  const prefersReduced = useRef(
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  ).current;
+  const [programIndex, setProgramIndex] = useState(0);
+  const [storyIndex, setStoryIndex] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const program = PROGRAMS[programIndex];
+  const story = program.stories[storyIndex];
+
+  useEffect(() => {
+    if (prefersReduced) {
+      setVisible(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 },
+    );
+    const section = document.getElementById('stories');
+    if (section) observer.observe(section);
+    return () => observer.disconnect();
+  }, [prefersReduced]);
+
+  const selectProgram = (index) => {
+    setProgramIndex(index);
+    setStoryIndex(0);
+  };
+
+  const step = (direction) => {
+    const count = program.stories.length;
+    setStoryIndex((prev) => (prev + direction + count) % count);
+  };
+
+  const fade = (delay) =>
+    prefersReduced
+      ? { opacity: 1 }
+      : {
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(16px)',
+          transition: visible ? `opacity 700ms ease ${delay}ms, transform 700ms ease ${delay}ms` : 'none',
+        };
 
   return (
     <section id="stories" className="bg-maven-cream">
