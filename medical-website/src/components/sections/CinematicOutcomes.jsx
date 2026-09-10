@@ -2,15 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 
 const OUTCOMES = [
   {
-    id: 'team',
-    word: 'One team',
+    id: 'specialties',
+    countTo: 30,
+    suffix: '+',
     arc: 0.85,
     color: '#0A2E28',
-    text: 'Primary care, women\u2019s health and pediatrics coordinated by a single connected team.',
+    text: 'Virtual visits across 30+ specialties, matched to what you need.',
   },
   {
     id: 'access',
-    word: 'Day or night',
+    countTo: 24,
+    suffix: '/7',
     arc: 0.7,
     color: '#0B7A69',
     text: '24/7 virtual access so care fits around work, school and real family life.',
@@ -36,6 +38,26 @@ const CIRCUMFERENCE = 2 * Math.PI * ARC_RADIUS;
 
 function OutcomeRing({ item, active, reduced }) {
   const target = CIRCUMFERENCE * (1 - item.arc);
+  const [display, setDisplay] = useState(item.countTo !== undefined ? 0 : null);
+  const numeric = item.countTo !== undefined;
+
+  useEffect(() => {
+    if (!numeric || !active || reduced) return undefined;
+    let raf = 0;
+    const duration = 1200;
+    const start = performance.now();
+    const tick = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3); // ease-out cubic
+      setDisplay(Math.round(item.countTo * eased));
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [active, reduced, numeric, item.countTo]);
+
+  const centerLabel = numeric ? `${display ?? item.countTo}${item.suffix}` : item.word;
+
   return (
     <div className="flex flex-col items-center text-center">
       <div className="relative h-[136px] w-[136px]">
@@ -56,8 +78,8 @@ function OutcomeRing({ item, active, reduced }) {
             }}
           />
         </svg>
-        <span className="absolute inset-0 flex items-center justify-center px-6 font-serif text-[19px] font-semibold leading-tight text-[#0A2E28]">
-          {item.word}
+        <span className="absolute inset-0 flex items-center justify-center px-6 font-serif text-[24px] font-semibold leading-tight text-[#0A2E28]">
+          {centerLabel}
         </span>
       </div>
       <p className="mt-4 max-w-[240px] text-[14px] leading-6 text-[#0A2E28]/70">{item.text}</p>
