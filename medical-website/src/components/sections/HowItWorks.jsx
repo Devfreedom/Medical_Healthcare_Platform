@@ -7,8 +7,10 @@ export default function HowItWorks() {
     <section className="mx-auto max-w-content px-4 py-16 sm:px-6 lg:px-8">
       <div className="grid items-center gap-12 lg:grid-cols-2">
         <div className="overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-nb-sand to-nb-line p-5">
-          <div className="flex min-h-[340px] items-center justify-center rounded-[1.25rem] border border-nb-line bg-gradient-to-br from-[#F7F4EE] to-[#DDE3E3] text-center text-sm font-medium uppercase tracking-[0.18em] text-nb-teal/80">
-            [Photo: family consulting with provider]
+          <div className="flex min-h-[340px] items-center justify-center rounded-[1.25rem] border border-nb-line bg-gradient-to-br from-nb-sand to-nb-line shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]">
+            <div className="flex h-28 w-28 items-center justify-center rounded-full border border-white/60 bg-white/30 text-4xl shadow-[0_12px_30px_rgba(19,42,44,0.08)] backdrop-blur-[2px]">
+              💬
+            </div>
           </div>
         </div>
 
