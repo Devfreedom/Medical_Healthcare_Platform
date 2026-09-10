@@ -6,6 +6,7 @@ import DirectAccessBento from '../../components/sections/DirectAccessBento';
 import CinematicOutcomes from '../../components/sections/CinematicOutcomes';
 import AudienceAccordion from '../../components/sections/AudienceAccordion';
 import TrustedMarquee from '../../components/sections/TrustedMarquee';
+import RealStoriesCTA from '../../components/sections/RealStoriesCTA';
 import EditorialIntro from '../../components/sections/EditorialIntro';
 import MissionStrip from '../../components/sections/MissionStrip';
 import HowItWorks from '../../components/sections/HowItWorks';
@@ -24,6 +25,7 @@ export default function Home() {
         <CinematicOutcomes />
         <AudienceAccordion />
         <TrustedMarquee />
+        <RealStoriesCTA />
         <EditorialIntro />
         <MissionStrip />
         <Outcomes />
