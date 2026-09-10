@@ -13,6 +13,9 @@ export default function MissionStrip() {
           <p className="mt-5 text-base leading-7 text-white/75 sm:text-lg">
             24/7 virtual care, predictive insights, and benefits support — all in one place, backed by clinical research.
           </p>
+          <a href="#appointment-form" className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-maven-pine transition hover:-translate-y-0.5">
+            Explore platform <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
 
         <div className="overflow-hidden rounded-3xl">
@@ -23,28 +26,22 @@ export default function MissionStrip() {
           />
         </div>
 
-        <div className="order-3 grid gap-4 sm:grid-cols-3 lg:col-start-2 lg:row-start-2 lg:grid-cols-1">
+        <div className="mt-8 grid gap-4 sm:grid-cols-3 lg:col-span-2 lg:grid-cols-3">
           {[
-            { icon: HeartHandshake, label: 'Patient-first care', description: 'Designed around your needs and experience.' },
-            { icon: ShieldCheck, label: 'Trusted professionals', description: 'Connect with qualified healthcare providers.' },
-            { icon: Stethoscope, label: 'Connected care', description: 'Support beyond your appointment.' },
-          ].map(({ icon: Icon, label, description }) => (
-            <div key={label} className="flex items-start gap-3 text-nb-ink/80">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-pastel-green text-pastel-green-ink">
-                <Icon className="h-4 w-4" />
+            { icon: HeartHandshake, stat: '40+', label: 'peer-reviewed studies' },
+            { icon: ShieldCheck, stat: '175+', label: 'countries covered' },
+            { icon: Stethoscope, stat: '27%', label: 'lower NICU admissions' },
+          ].map(({ icon: Icon, stat, label }) => (
+            <div key={label} className="rounded-3xl bg-white/[0.07] p-5 backdrop-blur">
+              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
+                <Icon className="h-5 w-5" />
               </span>
-              <div>
-                <div className="text-base font-semibold text-nb-teal">{label}</div>
-                <p className="mt-0.5 text-sm leading-5 text-nb-ink/65">{description}</p>
-              </div>
+              <div className="mt-4 font-serif text-3xl font-semibold">{stat}</div>
+              <p className="mt-1 text-sm text-white/70">{label}</p>
             </div>
           ))}
         </div>
-
-        <button type="button" className="order-4 inline-flex min-h-11 w-fit items-center gap-2 rounded-full border border-nb-teal px-6 py-3 font-semibold text-nb-teal transition hover:-translate-y-0.5 hover:bg-nb-teal hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nb-teal lg:col-start-2 lg:row-start-3">
-          Explore Our Story
-          <ArrowRight className="h-4 w-4" />
-        </button>
+      </div>
       </div>
     </section>
   );

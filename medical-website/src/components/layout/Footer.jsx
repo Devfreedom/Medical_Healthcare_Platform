@@ -1,6 +1,6 @@
-const companyLinks = ['About', 'Careers', 'Press'];
-const serviceLinks = ['Primary Care', 'Telehealth', 'Specialists'];
-const quickLinks = ['Book a Visit', 'Patient Portal', 'FAQ'];
+const companyLinks = ['Why us', 'Careers', 'Press', 'Providers'];
+const serviceLinks = ['Fertility & Family Building', 'Maternity & Newborn', 'Parenting & Pediatrics', 'Menopause & Midlife'];
+const quickLinks = ['Get care', 'Explore platform', 'For employers', 'Pricing'];
 
 const socialIcons = [
   { label: 'Instagram', symbol: '◎' },
@@ -11,14 +11,17 @@ const socialIcons = [
 
 export default function Footer() {
   return (
-    <footer className="bg-nb-ink text-white/75">
+    <footer className="bg-maven-pine-dark text-white/75">
       <div className="mx-auto max-w-content px-4 pb-8 pt-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-1">
-            <div className="mb-4 text-2xl font-bold tracking-tight text-white">Northbridge Health</div>
+            <div className="mb-4 font-serif text-2xl font-semibold tracking-tight text-white">Northbridge Health</div>
             <p className="max-w-xs text-sm leading-6 text-white/70">
-              Compassionate care, modern treatment, and a more personal approach to your healthcare journey.
+              The next generation of care for women and families — personal, proven, all in one place.
             </p>
+            <a href="#appointment-form" className="mt-5 inline-flex items-center gap-2 rounded-full bg-maven-clay px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-maven-clay-dark">
+              Get care →
+            </a>
           </div>
 
           <div>
@@ -35,7 +38,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-white/60">Services</h3>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-white/60">Programs</h3>
             <ul className="space-y-3 text-sm text-white/70">
               {serviceLinks.map((link) => (
                 <li key={link}>

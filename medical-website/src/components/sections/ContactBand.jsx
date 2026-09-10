@@ -3,7 +3,7 @@ import { useState } from 'react';
 const initialState = {
   fullName: '',
   phoneNumber: '',
-  reason: 'General inquiry',
+  reason: 'For businesses',
 };
 
 export default function ContactBand() {
@@ -20,69 +20,72 @@ export default function ContactBand() {
   };
 
   return (
-    <section id="contact-section" className="mt-8 overflow-hidden bg-nb-teal-dark pb-14 pt-10 text-white">
+    <section id="contact-section" className="overflow-hidden bg-maven-pine-dark pb-14 pt-12 text-white">
       <div className="mx-auto max-w-content px-4 sm:px-6 lg:px-8">
-        <div className="grid items-end gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-[1.75rem] bg-nb-teal-dark p-4 sm:p-6">
-            <h2 className="font-serif text-4xl leading-tight tracking-[-0.04em] text-white sm:text-5xl">
-              Get In Touch With Us Today
+        <div className="grid items-center gap-8 lg:grid-cols-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-maven-butter">Bring benefits into the future</p>
+            <h2 className="mt-3 font-serif text-4xl leading-[1.05] text-white sm:text-5xl">
+              Book a demo with our team
             </h2>
+            <p className="mt-4 max-w-md text-base leading-7 text-white/70">Discover how family health benefits can work for your people — for businesses and employees.</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href="#appointment-form" className="rounded-full bg-maven-clay px-6 py-3 text-sm font-semibold text-white transition hover:bg-maven-clay-dark">For businesses</a>
+              <a href="#appointment-form" className="rounded-full border border-white/25 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-maven-pine">For employees</a>
+            </div>
+          </div>
+          <div className="rounded-[1.75rem] bg-white p-6 text-maven-pine shadow-[0_24px_60px_rgba(0,0,0,0.25)] sm:p-8">
 
-            <form onSubmit={handleSubmit} className="mt-7 space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="contactName" className="mb-2 block text-sm text-white/80">Full Name</label>
+                <label htmlFor="contactName" className="mb-2 block text-sm font-medium">Full name</label>
                 <input
                   id="contactName"
                   name="fullName"
                   type="text"
                   value={form.fullName}
                   onChange={handleChange}
-                  className="w-full rounded-full border border-white/15 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 outline-none transition focus:border-white/40"
+                  className="w-full rounded-2xl border border-maven-line bg-maven-paper px-4 py-3 outline-none transition focus:border-maven-pine"
                   placeholder="Jane Doe"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="phoneNumber" className="mb-2 block text-sm text-white/80">Phone Number</label>
+                <label htmlFor="phoneNumber" className="mb-2 block text-sm font-medium">Work email</label>
                 <input
                   id="phoneNumber"
                   name="phoneNumber"
                   type="tel"
                   value={form.phoneNumber}
                   onChange={handleChange}
-                  className="w-full rounded-full border border-white/15 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 outline-none transition focus:border-white/40"
-                  placeholder="(555) 123-4567"
+                  className="w-full rounded-2xl border border-maven-line bg-maven-paper px-4 py-3 outline-none transition focus:border-maven-pine"
+                  placeholder="jane@company.com"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="reason" className="mb-2 block text-sm text-white/80">Reason</label>
+                <label htmlFor="reason" className="mb-2 block text-sm font-medium">I am interested as</label>
                 <select
                   id="reason"
                   name="reason"
                   value={form.reason}
                   onChange={handleChange}
-                  className="w-full rounded-full border border-white/15 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-white/40"
+                  className="w-full rounded-2xl border border-maven-line bg-maven-paper px-4 py-3 outline-none transition focus:border-maven-pine"
                 >
-                  <option className="text-nb-ink">General inquiry</option>
-                  <option className="text-nb-ink">Primary care</option>
-                  <option className="text-nb-ink">Specialist visit</option>
-                  <option className="text-nb-ink">Emergency support</option>
+                  <option>For businesses</option>
+                  <option>For employees</option>
+                  <option>For health plans</option>
+                  <option>For individuals</option>
                 </select>
               </div>
 
-              <button type="submit" className="rounded-full bg-nb-clay px-6 py-3 font-semibold text-white transition hover:bg-nb-clay-dark">
-                Submit Request
+              <button type="submit" className="w-full rounded-full bg-maven-pine px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-maven-pine-dark">
+                Book a demo
               </button>
+              <p className="text-center text-xs text-maven-pine/55">We will reply within one business day.</p>
             </form>
-          </div>
-
-          <div className="-mt-12 overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-nb-sand to-nb-line p-4 shadow-[0_24px_60px_rgba(9,19,20,0.2)]">
-            <div className="flex min-h-[280px] items-center justify-center rounded-[1.15rem] border border-white/40 bg-gradient-to-br from-[#F4F0E7] to-[#C5D7D5] text-center text-sm font-medium uppercase tracking-[0.18em] text-nb-teal/80">
-              [Photo: nurse with clipboard]
-            </div>
           </div>
         </div>
       </div>

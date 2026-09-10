@@ -4,17 +4,21 @@ import Hero from '../../components/sections/Hero';
 import MissionStrip from '../../components/sections/MissionStrip';
 import CareCategories from '../../components/sections/CareCategories';
 import HowItWorks from '../../components/sections/HowItWorks';
+import Outcomes from '../../components/sections/Outcomes';
+import Testimonials from '../../components/sections/Testimonials';
 import ContactBand from '../../components/sections/ContactBand';
 
 export default function Home() {
   return (
-    <div className="bg-nb-paper text-nb-ink">
+    <div className="bg-maven-paper text-maven-pine">
       <Header />
       <main>
         <Hero />
-        <MissionStrip />
         <CareCategories />
+        <MissionStrip />
+        <Outcomes />
         <HowItWorks />
+        <Testimonials />
         <ContactBand />
       </main>
       <Footer />
