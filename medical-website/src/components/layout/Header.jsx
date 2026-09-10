@@ -39,23 +39,31 @@ export default function Header() {
   const [displayedDropdown, setDisplayedDropdown] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const closeTimer = useRef(null);
+  const hideTimer = useRef(null);
 
   const openMenu = (name) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    setDisplayedDropdown(name);
     setOpenDropdown(name);
   };
   const scheduleClose = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setOpenDropdown(null), 160);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    closeTimer.current = setTimeout(() => {
+      setOpenDropdown(null);
+      hideTimer.current = setTimeout(() => setDisplayedDropdown(null), 200);
+    }, 160);
   };
   const cancelClose = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
   };
 
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape') {
-        setOpenDropdown(null);
+        closeMenu();
         setIsOpen(false);
       }
     };
@@ -73,20 +81,29 @@ export default function Header() {
   useEffect(
     () => () => {
       if (closeTimer.current) clearTimeout(closeTimer.current);
+      if (hideTimer.current) clearTimeout(hideTimer.current);
     },
     [],
   );
 
-  useEffect(() => {
-    if (openDropdown) {
-      setDisplayedDropdown(openDropdown);
-      return undefined;
-    }
-    const t = setTimeout(() => setDisplayedDropdown(null), 200);
-    return () => clearTimeout(t);
-  }, [openDropdown]);
-
   const closeDrawer = () => setIsOpen(false);
+  const closeMenu = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    setOpenDropdown(null);
+    setDisplayedDropdown(null);
+  };
+  const toggleMenu = (name) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (hideTimer.current) clearTimeout(hideTimer.current);
+    if (openDropdown === name) {
+      setOpenDropdown(null);
+      setDisplayedDropdown(null);
+    } else {
+      setDisplayedDropdown(name);
+      setOpenDropdown(name);
+    }
+  };
   const triggerClass = (name) =>
     `relative flex items-center gap-1.5 rounded-sm px-1 py-2 text-[14px] font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0B6B5D] after:absolute after:inset-x-1 after:-bottom-0.5 after:h-0.5 after:origin-left after:transition-transform after:duration-200 ${
       openDropdown === name
