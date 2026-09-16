@@ -219,7 +219,7 @@ export default function Header() {
               </div>
             )}
             {displayedDropdown === 'why' && (
-              <div className="w-[720px] max-w-[calc(100vw-3rem)] rounded-[12px] bg-white p-5 shadow-2xl ring-1 ring-black/5">
+              <div className="w-180 max-w-[calc(100vw-3rem)] rounded-xl bg-white p-5 shadow-2xl ring-1 ring-black/5">
                 <div className="grid grid-cols-3 gap-6">
                   <div>
                     <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Northbridge</p>
