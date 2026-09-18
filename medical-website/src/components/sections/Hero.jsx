@@ -68,7 +68,8 @@ export default function Hero() {
         <div className="relative h-full w-full">
           <div className="absolute left-[8%] right-6 top-[24%] z-20 max-w-[560px] sm:top-[28%] sm:pr-6">
             <h1 className="font-serif text-[clamp(2.25rem,4.6vw,56px)] font-light leading-[1.05] text-white">
-              Evidence-based women&apos;s and family <em className="italic">healthcare</em>
+            Evidence-based healthcare for every stage of life
+{/* <em className="italic">life</em> */}
             </h1>
             <p className="mt-4 text-[16px] leading-6 text-white/80">Expert care across every life stage.</p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center" style={{ gap: '12px' }}>
