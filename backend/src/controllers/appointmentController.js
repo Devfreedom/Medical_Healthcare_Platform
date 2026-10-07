@@ -11,7 +11,7 @@ function toAppointmentResponse(row) {
     specialty: row.specialty,
     reason: row.reason,
     visitType: row.visit_type,
-    date: new Date(row.date).toISOString().slice(0, 10),
+    date: formatDateOnly(row.date),
     time: row.time,
     status: row.status,
   };
