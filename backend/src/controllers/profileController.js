@@ -1,5 +1,5 @@
 import { pool } from '../config/db.js';
-import { toNullableString } from '../utils/validation.js';
+import { formatDateOnly, toNullableString } from '../utils/validation.js';
 
 function toProfileResponse(user, profileRow) {
   return {
@@ -7,9 +7,7 @@ function toProfileResponse(user, profileRow) {
       id: user.id,
       name: user.name,
       email: user.email,
-      dateOfBirth: profileRow.date_of_birth
-        ? new Date(profileRow.date_of_birth).toISOString().slice(0, 10)
-        : '',
+      dateOfBirth: formatDateOnly(profileRow.date_of_birth),
       phone: profileRow.phone || '',
       notifications: {
         appointments: profileRow.appointment_reminders,

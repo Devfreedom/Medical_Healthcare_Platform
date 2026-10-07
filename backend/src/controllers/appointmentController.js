@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { pool } from '../config/db.js';
-import { isFutureDate } from '../utils/validation.js';
+import { formatDateOnly, isFutureDate } from '../utils/validation.js';
 
 const VALID_VISIT_TYPES = ['video', 'in-person'];
 
