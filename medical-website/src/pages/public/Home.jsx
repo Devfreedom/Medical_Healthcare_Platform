@@ -9,6 +9,7 @@ import AudienceAccordion from '../../components/sections/AudienceAccordion';
 import TrustedMarquee from '../../components/sections/TrustedMarquee';
 import RealStoriesCTA from '../../components/sections/RealStoriesCTA';
 import HowItWorks from '../../components/sections/HowItWorks';
+import ContactBand from '../../components/sections/ContactBand';
 
 export default function Home() {
   return (
