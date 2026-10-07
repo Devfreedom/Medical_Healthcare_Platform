@@ -39,7 +39,7 @@ const pageMap = {
   profile: ProfileView,
 };
 
-export default function Portal({ user, onBack, onLogout }) {
+export default function Portal({ user, onBack, onLogout, onUserChange }) {
   const [activePage, setActivePage] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const ActiveView = useMemo(() => pageMap[activePage], [activePage]);
@@ -76,7 +76,11 @@ export default function Portal({ user, onBack, onLogout }) {
             </div>
           </div>
 
-          <ActiveView />
+          <ActiveView
+            user={user}
+            onNavigate={setActivePage}
+            onProfileSaved={(updatedUser) => onUserChange?.(updatedUser)}
+          />
         </div>
       </main>
     </div>

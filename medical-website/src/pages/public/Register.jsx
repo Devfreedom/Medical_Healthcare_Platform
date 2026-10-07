@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { api, setSession } from '../../lib/api';
+import { api } from '../../lib/api';
 
 function navigate(path) {
   window.history.pushState({}, '', path);
   window.dispatchEvent(new PopStateEvent('popstate'));
 }
 
-export default function Register() {
+export default function Register({ onAuthenticated }) {
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -39,8 +39,11 @@ export default function Register() {
         method: 'POST',
         body: JSON.stringify(form),
       });
-      setSession(result.token, result.user);
-      navigate('/portal');
+      if (onAuthenticated) {
+        onAuthenticated(result);
+      } else {
+        navigate('/portal');
+      }
     } catch (requestError) {
       setError(requestError.message);
     } finally {

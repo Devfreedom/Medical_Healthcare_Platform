@@ -1,3 +1,8 @@
+// Frontend API abstraction.
+// When VITE_API_URL is empty, routes to the temporary localStore backend.
+// When VITE_API_URL is set (future: Render Node/Express + PostgreSQL),
+// routes to the real HTTP API. Components must use `api()` and never touch
+// localStorage directly, so the backend swap requires no component changes.
 import {
   localAppointments,
   localCreateAppointment,

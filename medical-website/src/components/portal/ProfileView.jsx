@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
 
-export default function ProfileView() {
+export default function ProfileView({ onProfileSaved }) {
   const [form, setForm] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -28,6 +28,11 @@ export default function ProfileView() {
       });
       setForm(result.profile);
       setMessage('Your profile has been saved.');
+      onProfileSaved?.({
+        id: result.profile.id,
+        name: result.profile.name,
+        email: result.profile.email,
+      });
     } catch (requestError) {
       setError(requestError.message);
     } finally {

@@ -1,3 +1,8 @@
+// TEMPORARY FRONTEND-ONLY AUTH STORE — NOT SECURE, NOT PRODUCTION.
+// Uses localStorage + a non-cryptographic demo hash so the UI can be
+// exercised before the real backend exists. Passwords here are NOT securely
+// stored. The future Node/Express + PostgreSQL API will replace this entire
+// module with real authentication and persistent server data.
 const USERS_KEY = 'northbridge_local_users';
 const DATA_KEY = 'northbridge_local_data';
 const SESSION_KEY = 'northbridge_local_user_id';
@@ -16,6 +21,8 @@ function write(key, value) {
 }
 
 function hashPassword(value) {
+  // DEMO ONLY — FNV-1a is not password hashing. Never use in production.
+  // Kept isolated here so the Express backend can replace it with bcrypt/argon2.
   let hash = 2166136261;
   for (let index = 0; index < value.length; index += 1) {
     hash ^= value.charCodeAt(index);
@@ -166,6 +173,19 @@ export function localUpdateProfile(payload) {
 
   saveUsers(users);
   saveAllData(data);
+
+  // Keep the cached session identity in sync so header/portal show the new name.
+  try {
+    const stored = JSON.parse(localStorage.getItem('northbridge_user') || 'null');
+    if (stored && stored.id === id) {
+      localStorage.setItem(
+        'northbridge_user',
+        JSON.stringify({ id, name: data[id].profile.name, email: data[id].profile.email }),
+      );
+    }
+  } catch {
+    // Ignore corrupt session cache — App revalidates via localMe().
+  }
 
   return { profile: data[id].profile };
 }

@@ -3,7 +3,7 @@ import Home from './pages/public/Home';
 import Portal from './pages/patient/Portal';
 import Login from './pages/public/Login';
 import Register from './pages/public/Register';
-import { api, clearSession, getStoredUser, setSession } from './lib/api';
+import { api, clearSession, getStoredUser, getToken, setSession } from './lib/api';
 
 function getRoute() {
   return window.location.pathname.replace(/\/$/, '') || '/';
@@ -31,7 +31,7 @@ export default function App() {
     api('/api/auth/me')
       .then((result) => {
         if (cancelled) return;
-        const token = localStorage.getItem('northbridge_token') || localStorage.getItem('northbridge_local_token');
+        const token = getToken();
         if (token) setSession(token, result.user);
         setUser(result.user);
       })
@@ -68,6 +68,12 @@ export default function App() {
     return <div className="flex min-h-screen items-center justify-center bg-[#FFFBF4]"><div className="text-center"><div className="font-serif text-2xl text-[#0A3C2E]">Northbridge Health</div><div className="mt-2 text-sm text-[#6B7A77]">Checking your session…</div></div></div>;
   }
 
+  // Authenticated users never see the auth forms — send them to the portal.
+  if ((route === '/login' || route === '/register') && user) {
+    if (window.location.pathname !== '/portal') go('/portal');
+    return null;
+  }
+
   if (route === '/login') return <Login onAuthenticated={handleAuthenticated} />;
   if (route === '/register') return <Register onAuthenticated={handleAuthenticated} />;
 
@@ -76,7 +82,14 @@ export default function App() {
       if (window.location.pathname !== '/login') go('/login');
       return null;
     }
-    return <Portal user={user} onLogout={logout} onBack={() => go('/')} />;
+    return (
+      <Portal
+        user={user}
+        onLogout={logout}
+        onBack={() => go('/')}
+        onUserChange={setUser}
+      />
+    );
   }
 
   return <Home />;
