@@ -4,6 +4,12 @@ import { documents } from '../../data/documents';
 
 export default function RecordsView() {
   return (
+    <div className="space-y-6">
+      <div className="rounded-2xl border border-status-info bg-status-info-bg px-4 py-3 text-sm font-medium text-status-info">
+        Sample records shown for preview. Connected medical records arrive with the backend phase.
+        Coming soon.
+      </div>
+
     <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
       <div className="rounded-2xl border border-nb-line bg-white p-5 shadow-[0_12px_24px_rgba(19,42,44,0.04)]">
         <h3 className="mb-5 text-xl font-semibold text-nb-teal">Visit history</h3>
