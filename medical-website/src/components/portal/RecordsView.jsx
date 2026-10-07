@@ -10,9 +10,9 @@ export default function RecordsView() {
         Coming soon.
       </div>
 
-    <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
       <div className="rounded-2xl border border-nb-line bg-white p-5 shadow-[0_12px_24px_rgba(19,42,44,0.04)]">
-        <h3 className="mb-5 text-xl font-semibold text-nb-teal">Visit history</h3>
+        <h3 className="mb-5 text-xl font-semibold text-nb-teal">Visit history (sample)</h3>
 
         <div className="space-y-4">
           {visitHistory.map((visit) => (
@@ -32,7 +32,7 @@ export default function RecordsView() {
 
       <div className="space-y-6">
         <div className="rounded-2xl border border-nb-line bg-white p-5 shadow-[0_12px_24px_rgba(19,42,44,0.04)]">
-          <h3 className="mb-4 text-xl font-semibold text-nb-teal">Documents & results</h3>
+          <h3 className="mb-4 text-xl font-semibold text-nb-teal">Documents & results (sample)</h3>
           <div className="space-y-3">
             {documents.map((document) => (
               <div key={document.id} className="flex items-center gap-3 rounded-2xl bg-nb-paper p-3">
@@ -53,7 +53,7 @@ export default function RecordsView() {
             <ShieldAlert className="h-5 w-5" />
             Allergies
           </div>
-          <div className="text-sm text-nb-ink/70">Penicillin — rash in 2019.</div>
+          <div className="text-sm text-nb-ink/70">Sample: Penicillin — rash in 2019.</div>
         </div>
 
         <div className="rounded-2xl border border-nb-line bg-white p-5 shadow-[0_12px_24px_rgba(19,42,44,0.04)]">
