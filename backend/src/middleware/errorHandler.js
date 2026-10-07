@@ -6,6 +6,10 @@ export function errorHandler(error, req, res, next) {
     return next(error);
   }
 
+  if (error.message === 'CORS origin not allowed.') {
+    return res.status(403).json({ message: 'Origin not allowed.' });
+  }
+
   const status = Number(error.status || error.statusCode || 500);
   const message = status === 500 ? 'Something went wrong.' : error.message || 'Request failed.';
 
