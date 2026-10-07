@@ -32,8 +32,10 @@ export default function Home() {
         <HowItWorks />
         {/* Trusted By */}
         <TrustedMarquee />
-        {/* Real Stories + Testimonial Carousel + Final CTA / Book a Demo */}
+        {/* Real Stories + Testimonial Carousel + Final CTA */}
         <RealStoriesCTA />
+        {/* Contact / information request */}
+        <ContactBand />
       </main>
       {/* Footer */}
       <Footer />

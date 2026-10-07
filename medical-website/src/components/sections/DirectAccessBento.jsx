@@ -209,7 +209,7 @@ export default function DirectAccessBento() {
         <div className="mx-auto max-w-[1180px] px-4 py-16 sm:px-6 lg:py-24">
           <div className="grid gap-8 lg:grid-cols-2 lg:items-end">
             <h2 className="max-w-xl font-serif text-[32px] leading-[1.08] text-[#0A2E28] sm:text-[42px]">Virtual care, <em className="italic">connected</em> to every part of your health</h2>
-            <p className="max-w-[280px] text-[12px] leading-5 text-[#0A2E28]/75 lg:justify-self-end">Video visits, coordinated follow-up and simple digital tools \u2014 designed around women and families.</p>
+            <p className="max-w-[280px] text-[12px] leading-5 text-[#0A2E28]/75 lg:justify-self-end">Video visits, coordinated follow-up and simple digital tools \u2014 designed around every patient.</p>
           </div>
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <article className="relative overflow-hidden rounded-[16px] sm:col-span-2 lg:col-span-1 lg:min-h-[420px]">

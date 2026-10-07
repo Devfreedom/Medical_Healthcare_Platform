@@ -10,7 +10,7 @@ export default function HowItWorks() {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-maven-clay">Member journey</p>
           <h2 className="mt-3 font-serif text-4xl leading-[1.05] tracking-[-0.02em] text-maven-pine sm:text-5xl">Care that meets you where you are</h2>
           <p className="mt-4 max-w-md text-lg leading-8 text-maven-pine/65">24/7 virtual care, predictive insights, and benefits help — all in one place.</p>
-          <a href="#appointment-form" className="mt-7 inline-flex items-center gap-2 rounded-full bg-maven-pine px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-maven-pine-dark">
+          <a href="/register" onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/register'); window.dispatchEvent(new PopStateEvent('popstate')); }} className="mt-7 inline-flex items-center gap-2 rounded-full bg-maven-pine px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-maven-pine-dark">
             Get started <ArrowRight className="h-4 w-4" />
           </a>
           <div className="mt-8 overflow-hidden rounded-[1.75rem] border border-maven-line/70">

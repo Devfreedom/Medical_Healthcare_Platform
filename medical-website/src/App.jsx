@@ -24,7 +24,6 @@ export default function App() {
     let cancelled = false;
 
     if (!getStoredUser()) {
-      setCheckingSession(false);
       return undefined;
     }
 

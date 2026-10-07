@@ -13,7 +13,7 @@ export default function MissionStrip() {
           <p className="mt-5 text-base leading-7 text-white/75 sm:text-lg">
             24/7 virtual care, predictive insights, and benefits support — all in one place, backed by clinical research.
           </p>
-          <a href="#appointment-form" className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-maven-pine transition hover:-translate-y-0.5">
+          <a href="#care-categories" className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-maven-pine transition hover:-translate-y-0.5">
             Explore platform <ArrowRight className="h-4 w-4" />
           </a>
         </div>
