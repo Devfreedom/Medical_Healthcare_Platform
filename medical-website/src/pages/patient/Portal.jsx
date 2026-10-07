@@ -1,13 +1,5 @@
 import { useMemo, useState } from 'react';
-import {
-  Calendar,
-  ClipboardList,
-  Home,
-  MessageSquare,
-  Receipt,
-  Settings,
-  Video,
-} from 'lucide-react';
+import { Calendar, ClipboardList, Home, LogOut, MessageSquare, Receipt, Settings, Video } from 'lucide-react';
 import PortalSidebar from '../../components/portal/PortalSidebar';
 import DashboardView from '../../components/portal/DashboardView';
 import AppointmentsView from '../../components/portal/AppointmentsView';
@@ -47,12 +39,10 @@ const pageMap = {
   profile: ProfileView,
 };
 
-export default function Portal({ onBack }) {
+export default function Portal({ user, onBack, onLogout }) {
   const [activePage, setActivePage] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
   const ActiveView = useMemo(() => pageMap[activePage], [activePage]);
-
   const activeLabel = navConfig.find((item) => item.id === activePage)?.label || 'Dashboard';
 
   return (
@@ -68,19 +58,22 @@ export default function Portal({ onBack }) {
 
       <main className="min-w-0 flex-1 bg-nb-paper">
         <div className="mx-auto max-w-7xl px-4 py-6 pt-20 sm:px-6 lg:px-8 lg:pt-6">
-          <div className="mb-6 flex items-center justify-between gap-4 border-b border-nb-line pb-4">
+          <div className="mb-6 flex flex-col gap-4 border-b border-nb-line pb-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.2em] text-nb-teal/60">Patient portal</p>
               <h1 className="mt-2 font-serif text-4xl tracking-[-0.04em] text-nb-teal">{activeLabel}</h1>
               <p className="mt-2 text-sm text-nb-ink/65">{pageSubtitles[activePage]}</p>
+              <p className="mt-1 text-xs text-nb-ink/50">Signed in as {user?.name || user?.email}</p>
             </div>
-            <button
-              type="button"
-              onClick={onBack}
-              className="inline-flex items-center gap-2 rounded-full border border-nb-line bg-white px-4 py-2 text-sm font-medium text-nb-teal transition hover:bg-nb-sand"
-            >
-              Back to homepage
-            </button>
+            <div className="flex flex-wrap gap-2">
+              <button type="button" onClick={onBack} className="rounded-full border border-nb-line bg-white px-4 py-2 text-sm font-medium text-nb-teal hover:bg-nb-sand">
+                Back to homepage
+              </button>
+              <button type="button" onClick={onLogout} className="inline-flex items-center gap-2 rounded-full bg-nb-ink px-4 py-2 text-sm font-medium text-white hover:opacity-90">
+                <LogOut className="h-4 w-4" />
+                Log out
+              </button>
+            </div>
           </div>
 
           <ActiveView />
