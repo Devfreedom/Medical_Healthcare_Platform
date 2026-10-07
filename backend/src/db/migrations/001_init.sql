@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS users (
   id UUID PRIMARY KEY,
   name TEXT NOT NULL CHECK (char_length(name) >= 2),
-  email CITEXT UNIQUE NOT NULL,
+  email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
