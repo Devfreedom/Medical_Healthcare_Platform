@@ -20,8 +20,9 @@ export default function PortalSidebar({ navItems, activePage, onSelect, onBack, 
         />
       )}
       <aside
-        className="fixed inset-y-0 left-0 z-20 w-60 shrink-0 bg-nb-teal-dark text-white transition-transform lg:static"
-        style={{ transform: isOpen ? 'translateX(0)' : 'translateX(-100%)' }}
+        className={`fixed inset-y-0 left-0 z-20 w-60 shrink-0 bg-nb-teal-dark text-white transition-transform lg:static lg:translate-x-0 ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
       <div className="flex h-full flex-col px-4 py-6">
         <div className="mb-8 flex items-center gap-3 px-2">
@@ -41,7 +42,7 @@ export default function PortalSidebar({ navItems, activePage, onSelect, onBack, 
                 type="button"
                 onClick={() => {
                   onSelect(id);
-                  onToggle();
+                  if (isOpen) onToggle();
                 }}
                 className={`flex w-full items-center gap-3 rounded-full px-3 py-2.5 text-left text-sm font-medium transition ${
                   isActive
