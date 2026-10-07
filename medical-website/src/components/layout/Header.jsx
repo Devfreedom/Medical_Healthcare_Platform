@@ -10,13 +10,13 @@ const whyInfoLinks = [
   { label: 'Why Us', href: '#about' },
   { label: 'How it works', href: '#how-it-works' },
   { label: 'Stories', href: '#stories' },
-  { label: 'Book a visit', href: '#appointment-form' },
+  { label: 'Book a visit', href: '/register' },
 ];
 const whyProgramLinks = categories.map((c) => ({ label: c.title, href: '#care-categories' }));
 const whyExtensionLinks = [
   { label: 'For Employers', href: '#contact-section' },
   { label: 'For Health Plans', href: '#contact-section' },
-  { label: 'For Individuals', href: '#appointment-form' },
+  { label: 'For Individuals', href: '/register' },
   { label: 'Contact Us', href: '#contact-section' },
 ];
 const resourceLinks = [
@@ -146,7 +146,7 @@ export default function Header() {
             </span>
             <span className="leading-tight">
               <span className="block font-serif text-[17px] font-semibold tracking-tight text-[#0A2E28]">Northbridge Health</span>
-              <span className="block text-[10px] font-medium uppercase tracking-[0.16em] text-[#0B6B5D]">Women + Family Care</span>
+              <span className="block text-[10px] font-medium uppercase tracking-[0.16em] text-[#0B6B5D]">General Healthcare</span>
             </span>
           </a>
 
@@ -316,10 +316,19 @@ export default function Header() {
         </nav>
 
         <div className="mt-auto px-5 pb-6 pt-4">
-          <a href="#appointment-form" onClick={closeDrawer} className="flex w-full items-center justify-center gap-2 rounded-[6px] bg-[#0B7A69] px-6 py-3.5 text-sm font-semibold tracking-[0.01em] text-white transition hover:bg-[#0A3D36]">
+          <a
+            href="/register"
+            onClick={(e) => {
+              e.preventDefault();
+              closeDrawer();
+              window.history.pushState({}, '', '/register');
+              window.dispatchEvent(new PopStateEvent('popstate'));
+            }}
+            className="flex w-full items-center justify-center gap-2 rounded-[6px] bg-[#0B7A69] px-6 py-3.5 text-sm font-semibold tracking-[0.01em] text-white transition hover:bg-[#0A3D36]"
+          >
             Get care <ArrowRight className="h-4 w-4" />
           </a>
-          <p className="mt-4 text-center text-xs leading-5 text-[#111827]/55">Coordinated care for women and families</p>
+          <p className="mt-4 text-center text-xs leading-5 text-[#111827]/55">Coordinated care for everyone</p>
         </div>
       </aside>
     </>
