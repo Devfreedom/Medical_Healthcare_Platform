@@ -61,9 +61,10 @@ export default function RecordsView() {
             <Pill className="h-5 w-5" />
             Active prescriptions
           </div>
-          <div className="text-sm text-nb-ink/70">Lisinopril 10mg — once daily</div>
+          <div className="text-sm text-nb-ink/70">Sample: Lisinopril 10mg — once daily</div>
         </div>
       </div>
+    </div>
     </div>
   );
 }
