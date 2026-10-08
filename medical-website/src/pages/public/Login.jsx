@@ -108,10 +108,10 @@ export default function Login({ onAuthenticated }) {
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
-            {errors.password && <p className="mt-1.5 text-[12px] text-[#C0473B]">{errors.password}</p>}
+            {errors.password && <p id="login-password-error" className="mt-1.5 text-[12px] text-[#C0473B]">{errors.password}</p>}
 
-            <button type="button" onClick={() => setNotice('Password reset will be connected during the backend/authentication phase.')} className="mt-3 text-left text-[11px] text-[#0A6B5E] underline-offset-2 hover:underline">
-              Reset password?
+            <button type="button" title="Coming soon" onClick={() => setNotice('Password reset will be connected during the backend/authentication phase.')} className="mt-3 text-left text-[11px] text-[#0A6B5E] underline-offset-2 hover:underline">
+              Reset password? (Coming soon)
             </button>
 
             <button disabled={loading} type="submit" className="mt-6 h-[40px] w-full rounded-[6px] bg-[#0A6B5E] text-[14px] font-medium text-white transition hover:bg-[#095A4F] disabled:cursor-not-allowed disabled:opacity-60">
@@ -133,11 +133,11 @@ export default function Login({ onAuthenticated }) {
           </div>
 
           <div className="space-y-2">
-            <button type="button" onClick={() => setNotice('Google sign-in will be connected during the authentication phase.')} className="flex h-[40px] w-full items-center justify-center rounded-[6px] border border-[#D9E2DF] text-[13px] text-[#0A2E28] hover:bg-[#F4F8F6]">
-              Continue with Google
+            <button type="button" title="Coming soon — Google sign-in arrives with the backend" onClick={() => setNotice('Google sign-in will be connected during the authentication phase.')} className="flex h-[40px] w-full items-center justify-center rounded-[6px] border border-[#D9E2DF] text-[13px] text-[#0A2E28] hover:bg-[#F4F8F6]">
+              Continue with Google (Coming soon)
             </button>
-            <button type="button" onClick={() => setNotice('Apple sign-in will be connected during the authentication phase.')} className="flex h-[40px] w-full items-center justify-center rounded-[6px] border border-[#D9E2DF] text-[13px] text-[#0A2E28] hover:bg-[#F4F8F6]">
-              Continue with Apple
+            <button type="button" title="Coming soon — Apple sign-in arrives with the backend" onClick={() => setNotice('Apple sign-in will be connected during the authentication phase.')} className="flex h-[40px] w-full items-center justify-center rounded-[6px] border border-[#D9E2DF] text-[13px] text-[#0A2E28] hover:bg-[#F4F8F6]">
+              Continue with Apple (Coming soon)
             </button>
           </div>
         </div>
