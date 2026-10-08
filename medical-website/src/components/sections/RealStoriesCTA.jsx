@@ -188,23 +188,28 @@ export default function RealStoriesCTA() {
         <div className="relative z-10 mx-auto max-w-[700px] px-6 py-24 text-center md:py-32">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0A2E28]/60">Next step</p>
           <h2 className="mt-4 font-serif text-4xl leading-[1.06] text-[#0A2E28] sm:text-5xl">
-            Bring your benefits into the <em className="italic">future</em>
+            Take the next step in your <em className="italic">care</em>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-[#0A2E28]/70">
-            Explore what a modern, coordinated care experience could look like for your team — and for the families who count on them.
+            Create an account to book visits, message your care team, and manage your health in one place.
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
-              href="#contact-section"
+              href="/register"
+              onClick={(e) => {
+                e.preventDefault();
+                window.history.pushState({}, '', '/register');
+                window.dispatchEvent(new PopStateEvent('popstate'));
+              }}
               className="inline-flex items-center justify-center rounded-[8px] bg-[#0A2E28] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#114232]"
             >
-              For organizations
+              Create an account
             </a>
             <a
-              href="#contact-section"
+              href="#care-categories"
               className="inline-flex items-center justify-center rounded-[8px] border border-[#0A2E28] px-6 py-2.5 text-sm font-semibold text-[#0A2E28] transition hover:bg-[#0A2E28] hover:text-white"
             >
-              For individuals
+              Explore care programs
             </a>
           </div>
         </div>
