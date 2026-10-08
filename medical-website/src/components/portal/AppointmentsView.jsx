@@ -52,10 +52,6 @@ export default function AppointmentsView() {
   const past = appointments.filter((appointment) => appointment.status === 'completed');
 
   const list = activeTab === 'past' ? past : upcoming;
-  const tomorrow = useMemo(
-    () => new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10),
-    [],
-  );
 
   return (
     <div className="space-y-6">
