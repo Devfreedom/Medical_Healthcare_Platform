@@ -28,9 +28,9 @@ const resourceLinks = [
 const mobileDrawerItems = [
   { label: 'For You', href: '#care-categories' },
   { label: 'Why Northbridge', href: '#about' },
-  { label: 'Resources', href: '#stories' },
   { label: 'How it works', href: '#how-it-works' },
   { label: 'Stories', href: '#stories' },
+  { label: 'Contact', href: '#contact-section' },
 ];
 
 export default function Header() {
@@ -90,6 +90,22 @@ export default function Header() {
   );
 
   const closeDrawer = () => setIsOpen(false);
+  const goTo = (path) => {
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  };
+  // Dropdown links mix in-page anchors and app routes ("/login", "/register").
+  // App routes must use SPA navigation like the header buttons — a plain
+  // anchor would trigger a full page reload instead.
+  const handlePanelNav = (event, href) => {
+    if (href.startsWith('/')) {
+      event.preventDefault();
+      closeMenu();
+      goTo(href);
+    } else {
+      closeMenu();
+    }
+  };
   const closeMenu = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     if (hideTimer.current) clearTimeout(hideTimer.current);
@@ -152,18 +168,18 @@ export default function Header() {
 
           <nav aria-label="Primary" className="hidden items-center gap-6 lg:flex" onMouseLeave={scheduleClose}>
             <div onMouseEnter={() => openMenu('for-you')}>
-              <button type="button" aria-expanded={openDropdown === 'for-you'} onClick={() => toggleMenu('for-you')} className={triggerClass('for-you')}>
-                For You <ChevronDown className="h-3.5 w-3.5" />
+              <button type="button" aria-expanded={openDropdown === 'for-you'} aria-haspopup="true" aria-controls="primary-dropdown-panel" onClick={() => toggleMenu('for-you')} className={triggerClass('for-you')}>
+                For You <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${openDropdown === 'for-you' ? 'rotate-180' : ''}`} />
               </button>
             </div>
             <div onMouseEnter={() => openMenu('why')}>
-              <button type="button" aria-expanded={openDropdown === 'why'} onClick={() => toggleMenu('why')} className={triggerClass('why')}>
-                Why Northbridge <ChevronDown className="h-3.5 w-3.5" />
+              <button type="button" aria-expanded={openDropdown === 'why'} aria-haspopup="true" aria-controls="primary-dropdown-panel" onClick={() => toggleMenu('why')} className={triggerClass('why')}>
+                Why Northbridge <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${openDropdown === 'why' ? 'rotate-180' : ''}`} />
               </button>
             </div>
             <div onMouseEnter={() => openMenu('resources')}>
-              <button type="button" aria-expanded={openDropdown === 'resources'} onClick={() => toggleMenu('resources')} className={triggerClass('resources')}>
-                Resources <ChevronDown className="h-3.5 w-3.5" />
+              <button type="button" aria-expanded={openDropdown === 'resources'} aria-haspopup="true" aria-controls="primary-dropdown-panel" onClick={() => toggleMenu('resources')} className={triggerClass('resources')}>
+                Resources <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${openDropdown === 'resources' ? 'rotate-180' : ''}`} />
               </button>
             </div>
             <a href="#how-it-works" onMouseEnter={() => openMenu(null)} className="px-1 py-2 text-[14px] font-medium text-[#111827] hover:text-[#0B6B5D]">How it works</a>
@@ -206,7 +222,7 @@ export default function Header() {
               <span className="block h-0.5 w-5 rounded-full bg-current" />
               <span className="block h-0.5 w-5 rounded-full bg-current" />
           </button>
-          <div onMouseEnter={cancelClose} onMouseLeave={scheduleClose} onFocus={cancelClose} className={`absolute left-1/2 top-full hidden w-max max-w-[calc(100vw-3rem)] -translate-x-1/2 pt-3 transition-all duration-200 ease-out lg:block ${openDropdown ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0 pointer-events-none'}`}>
+          <div id="primary-dropdown-panel" onMouseEnter={cancelClose} onMouseLeave={scheduleClose} onFocus={cancelClose} className={`absolute left-1/2 top-full hidden w-max max-w-[calc(100vw-3rem)] -translate-x-1/2 pt-3 transition-all duration-200 ease-out lg:block ${openDropdown ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0 pointer-events-none'}`}>
             {displayedDropdown === 'for-you' && (
               <div className="w-[800px] max-w-[calc(100vw-3rem)] rounded-[12px] bg-white p-4 shadow-2xl ring-1 ring-black/5">
                 <div className="flex items-center justify-between px-2 pb-3 pt-1">
@@ -215,7 +231,7 @@ export default function Header() {
                 </div>
                 <div className="grid grid-cols-4 gap-3">
                   {forYouCards.map((card, i) => (
-                    <a key={card.id} href="#care-categories" onClick={closeMenu} style={{ animationDelay: `${i * 30}ms` }} className="nb-drop-item group relative block h-[220px] w-full max-w-[180px] justify-self-center overflow-hidden rounded-[8px] bg-[#0A2E28] transition-all duration-200 hover:-translate-y-0.5">
+                    <a key={card.id} href="#care-categories" onClick={(e) => handlePanelNav(e, '#care-categories')} style={{ animationDelay: `${i * 30}ms` }} className="nb-drop-item group relative block h-[220px] w-full max-w-[180px] justify-self-center overflow-hidden rounded-[8px] bg-[#0A2E28] transition-all duration-200 hover:-translate-y-0.5">
                       <img src={card.image} alt="" aria-hidden="true" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                       <span className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
                       <span className="absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-full bg-[#0A3D36] px-2.5 py-1 text-[10px] font-semibold text-[#7AF0C0]">
@@ -235,7 +251,7 @@ export default function Header() {
                     <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Northbridge</p>
                     <ul>
                       {whyInfoLinks.map((link) => (
-                        <li key={link.label}><a href={link.href} onClick={closeMenu} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
+                        <li key={link.label}><a href={link.href} onClick={(e) => handlePanelNav(e, link.href)} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
                       ))}
                     </ul>
                   </div>
@@ -243,7 +259,7 @@ export default function Header() {
                     <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Programs / Care Areas</p>
                     <ul>
                       {whyProgramLinks.map((link) => (
-                        <li key={link.label}><a href={link.href} onClick={closeMenu} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
+                        <li key={link.label}><a href={link.href} onClick={(e) => handlePanelNav(e, link.href)} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
                       ))}
                     </ul>
                   </div>
@@ -251,7 +267,7 @@ export default function Header() {
                     <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Program Extensions</p>
                     <ul>
                       {whyExtensionLinks.map((link) => (
-                        <li key={link.label}><a href={link.href} onClick={closeMenu} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
+                        <li key={link.label}><a href={link.href} onClick={(e) => handlePanelNav(e, link.href)} className="block px-2 py-1.5 text-[14px] leading-8 text-[#111827] hover:text-[#0B6B5D]">{link.label}</a></li>
                       ))}
                     </ul>
                   </div>
@@ -265,7 +281,7 @@ export default function Header() {
                     <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Resources</p>
                     <ul>
                       {resourceLinks.map((link) => (
-                        <li key={link.label}><a href={link.href} onClick={closeMenu} className="block rounded-xl px-3 py-2.5 hover:bg-[#0B6B5D]/5"><span className="block text-[14px] font-medium text-[#111827]">{link.label}</span><span className="block text-[13px] text-[#6B7280]">{link.desc}</span></a></li>
+                        <li key={link.label}><a href={link.href} onClick={(e) => handlePanelNav(e, link.href)} className="block rounded-xl px-3 py-2.5 hover:bg-[#0B6B5D]/5"><span className="block text-[14px] font-medium text-[#111827]">{link.label}</span><span className="block text-[13px] text-[#6B7280]">{link.desc}</span></a></li>
                       ))}
                     </ul>
                   </div>
@@ -273,7 +289,7 @@ export default function Header() {
                     <p className="text-[11px] font-bold uppercase tracking-widest text-[#6B7280]">Featured Resource</p>
                     <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=240&q=60" alt="Featured Northbridge care guide" loading="lazy" width={120} height={80} className="mt-3 h-[80px] w-[120px] rounded-[6px] object-cover" />
                     <p className="mt-3 text-[14px] font-semibold leading-6 text-[#111827]">Your guide to coordinated family care</p>
-                    <a href="#about" onClick={closeMenu} className="mt-1 inline-flex items-center gap-1 text-[14px] font-semibold text-[#0B6B5D] hover:underline">Read the guide <ArrowRight className="h-3.5 w-3.5" /></a>
+                    <a href="#about" onClick={(e) => handlePanelNav(e, "#about")} className="mt-1 inline-flex items-center gap-1 text-[14px] font-semibold text-[#0B6B5D] hover:underline">Read the guide <ArrowRight className="h-3.5 w-3.5" /></a>
                   </div>
                 </div>
               </div>
