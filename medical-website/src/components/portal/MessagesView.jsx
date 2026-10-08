@@ -55,7 +55,7 @@ export default function MessagesView() {
         {threads.length === 0 ? <p className="rounded-2xl bg-nb-paper p-4 text-sm text-nb-ink/60">No conversations yet.</p> : (
           <div className="space-y-3">
             {threads.map((thread) => (
-              <button key={thread.id} type="button" onClick={() => setActiveThreadId(thread.id)} className={`w-full rounded-2xl p-3 text-left ${activeThreadId === thread.id ? 'bg-nb-sand' : 'bg-nb-paper'}`}>
+              <button key={thread.id} type="button" aria-current={activeThreadId === thread.id ? 'true' : undefined} onClick={() => setActiveThreadId(thread.id)} className={`w-full rounded-2xl p-3 text-left ${activeThreadId === thread.id ? 'bg-nb-sand' : 'bg-nb-paper'}`}>
                 <div className="font-medium text-nb-ink">{thread.name}</div>
                 <div className="mt-1 text-sm text-nb-ink/60">{thread.preview}</div>
               </button>

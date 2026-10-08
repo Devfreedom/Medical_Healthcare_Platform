@@ -100,11 +100,10 @@ export default function AppointmentsView() {
             <label className="text-sm font-medium">Reason<select name="reason" value={form.reason} onChange={(e) => setForm((v) => ({ ...v, reason: e.target.value }))} className="mt-2 w-full rounded-full border border-nb-line bg-white px-4 py-3 outline-none focus:border-nb-teal"><option>Follow-up</option><option>Annual wellness</option><option>New concern</option><option>Medication review</option></select></label>
             <label className="text-sm font-medium">Provider<select name="provider" value={form.provider} onChange={(e) => setForm((v) => ({ ...v, provider: e.target.value }))} className="mt-2 w-full rounded-full border border-nb-line bg-white px-4 py-3 outline-none focus:border-nb-teal"><option>Dr. Amara Odum</option><option>Dr. Marcus Kane</option><option>Dr. Elena Marx</option></select></label>
             <label className="text-sm font-medium">Visit type<select name="visitType" value={form.visitType} onChange={(e) => setForm((v) => ({ ...v, visitType: e.target.value }))} className="mt-2 w-full rounded-full border border-nb-line bg-white px-4 py-3 outline-none focus:border-nb-teal"><option value="video">Video</option><option value="in-person">In person</option></select></label>
-            <label className="text-sm font-medium">Preferred date<input type="date" name="date" value={form.date} onChange={(e) => setForm((v) => ({ ...v, date: e.target.value }))} className="mt-2 w-full rounded-full border border-nb-line bg-white px-4 py-3 outline-none focus:border-nb-teal" /></label>
+            <label className="text-sm font-medium">Preferred date (must be after today)<input type="date" name="date" min={tomorrow} value={form.date} onChange={(e) => setForm((v) => ({ ...v, date: e.target.value }))} className="mt-2 w-full rounded-full border border-nb-line bg-white px-4 py-3 outline-none focus:border-nb-teal" /></label>
             <div className="md:col-span-2">
               <button disabled={saving} type="submit" className="rounded-full bg-nb-clay px-6 py-3 font-semibold text-white disabled:opacity-60">{saving ? 'Saving request…' : 'Request appointment'}</button>
               {error && <p role="alert" className="mt-3 text-sm text-red-600">{error}</p>}
-              {message && <p role="status" className="mt-3 rounded-2xl bg-status-ok-bg px-4 py-3 text-sm font-medium text-status-ok">{message}</p>}
             </div>
           </form>
         </div>
