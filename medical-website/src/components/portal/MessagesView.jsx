@@ -78,8 +78,8 @@ export default function MessagesView() {
             ))}
           </div>
           <div className="mt-5 flex items-center gap-3 border-t border-nb-line pt-3">
-            <input value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') send(); }} placeholder="Type a message" className="flex-1 rounded-full border border-nb-line bg-nb-paper px-4 py-3 text-sm outline-none focus:border-nb-teal" />
-            <button disabled={sending} type="button" onClick={send} className="inline-flex items-center gap-2 rounded-full bg-nb-teal px-4 py-3 text-sm font-semibold text-white disabled:opacity-60">{sending ? 'Sending…' : 'Send'}<SendHorizonal className="h-4 w-4" /></button>
+            <input value={draft} aria-label="Type a message" onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') send(); }} placeholder="Type a message" className="flex-1 rounded-full border border-nb-line bg-nb-paper px-4 py-3 text-sm outline-none focus:border-nb-teal" />
+            <button disabled={sending || !draft.trim()} type="button" onClick={send} aria-label="Send message" className="inline-flex items-center gap-2 rounded-full bg-nb-teal px-4 py-3 text-sm font-semibold text-white disabled:opacity-60">{sending ? 'Sending…' : 'Send'}<SendHorizonal className="h-4 w-4" /></button>
           </div>
         </div>
       ) : (

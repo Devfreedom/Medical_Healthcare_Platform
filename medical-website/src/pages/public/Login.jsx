@@ -84,9 +84,11 @@ export default function Login({ onAuthenticated }) {
               autoComplete="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
+              aria-invalid={errors.email ? 'true' : undefined}
+              aria-describedby={errors.email ? 'login-email-error' : undefined}
               className="mt-2 h-[40px] w-full rounded-[6px] border border-[#D9E2DF] px-3 text-[14px] outline-none focus:border-[#0A6B5E] focus:ring-2 focus:ring-[#0A6B5E]/20"
             />
-            {errors.email && <p className="mt-1.5 text-[12px] text-[#C0473B]">{errors.email}</p>}
+            {errors.email && <p id="login-email-error" className="mt-1.5 text-[12px] text-[#C0473B]">{errors.email}</p>}
 
             <label htmlFor="login-password" className="mt-6 block text-[13px] font-medium text-[#0A2E28]">
               Password<span className="text-[#C0473B]">*</span>
@@ -98,6 +100,8 @@ export default function Login({ onAuthenticated }) {
                 autoComplete="current-password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
+                aria-invalid={errors.password ? 'true' : undefined}
+                aria-describedby={errors.password ? 'login-password-error' : undefined}
                 className="h-[40px] w-full rounded-[6px] border border-[#D9E2DF] px-3 pr-12 text-[14px] outline-none focus:border-[#0A6B5E] focus:ring-2 focus:ring-[#0A6B5E]/20"
               />
               <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? 'Hide password' : 'Show password'} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7A77]">
