@@ -117,7 +117,7 @@ export default function DashboardView({ user, onNavigate }) {
         </div>
 
         <div className="space-y-6">
-          <MiniCalendar />
+          <MiniCalendar appointmentDates={appointments.map((appointment) => appointment.date)} />
 
           <div className="rounded-2xl border border-nb-line bg-white p-5 shadow-[0_12px_24px_rgba(19,42,44,0.04)]">
             <h3 className="mb-2 text-xl font-semibold text-nb-teal">Messages</h3>
