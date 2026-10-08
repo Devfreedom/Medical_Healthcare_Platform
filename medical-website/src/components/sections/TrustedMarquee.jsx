@@ -2,7 +2,7 @@ const TRUST_ITEMS = [
   'Evidence-guided care',
   'Clinician-reviewed',
   '24/7 virtual access',
-  '30+ specialties',
+  'Broad specialty coverage',
   'Coordinated teams',
   'Personal care plans',
   'Ongoing support',

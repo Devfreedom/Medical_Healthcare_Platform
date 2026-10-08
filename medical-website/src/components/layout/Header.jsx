@@ -3,7 +3,7 @@ import { ArrowRight, ChevronDown, X } from 'lucide-react';
 import { categories } from '../../data/categories';
 
 const ANNOUNCEMENT_TEXT =
-  'LIVE AMA - SEPT 16 | Countdown to Unbundling: What You Need to Know for 2027 | Register now \u2192';
+  'NOW WELCOMING NEW PATIENTS | Create an account to book visits and message your care team | Get started \u2192';
 const forYouCards = categories.slice(0, 4);
 
 const whyInfoLinks = [

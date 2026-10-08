@@ -3,11 +3,10 @@ import { useEffect, useRef, useState } from 'react';
 const OUTCOMES = [
   {
     id: 'specialties',
-    countTo: 30,
-    suffix: '+',
+    word: 'Broad',
     arc: 0.85,
     color: '#0A2E28',
-    text: 'Virtual visits across 30+ specialties, matched to what you need.',
+    text: 'Virtual visits across a broad range of specialties, matched to what you need.',
   },
   {
     id: 'access',

@@ -11,7 +11,7 @@ export default function MissionStrip() {
             The most trusted platform for family health
           </h2>
           <p className="mt-5 text-base leading-7 text-white/75 sm:text-lg">
-            24/7 virtual care, predictive insights, and benefits support — all in one place, backed by clinical research.
+            24/7 virtual care and benefits support — all in one place.
           </p>
           <a href="#care-categories" className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-maven-pine transition hover:-translate-y-0.5">
             Explore platform <ArrowRight className="h-4 w-4" />
@@ -28,9 +28,9 @@ export default function MissionStrip() {
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3 lg:col-span-2 lg:grid-cols-3">
           {[
-            { icon: HeartHandshake, stat: '40+', label: 'peer-reviewed studies' },
-            { icon: ShieldCheck, stat: '175+', label: 'countries covered' },
-            { icon: Stethoscope, stat: '27%', label: 'lower NICU admissions' },
+            { icon: HeartHandshake, stat: '24/7', label: 'virtual access to care' },
+            { icon: ShieldCheck, stat: 'Private', label: 'secure and coordinated care' },
+            { icon: Stethoscope, stat: 'Whole-person', label: 'care across every life stage' },
           ].map(({ icon: Icon, stat, label }) => (
             <div key={label} className="rounded-3xl bg-white/[0.07] p-5 backdrop-blur">
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10">

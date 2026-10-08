@@ -7,7 +7,7 @@ export const steps = [
   {
     id: 2,
     title: 'Meet your care team',
-    description: 'Book on-demand virtual visits across 30+ specialties, day or night.',
+    description: 'Book on-demand virtual visits across a broad range of specialties, day or night.',
   },
   {
     id: 3,
