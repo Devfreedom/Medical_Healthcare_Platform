@@ -22,7 +22,7 @@ const navConfig = [
 const pageSubtitles = {
   dashboard: "Here's what's happening with your care.",
   appointments: 'Manage upcoming visits and request a new appointment.',
-  telehealth: 'Join your secure virtual visit when your care team is ready.',
+  telehealth: 'Preview of virtual visits — scheduling arrives with the backend phase.',
   records: 'Review visit history, documents, allergies, and prescriptions.',
   messages: 'Stay connected with your care team.',
   billing: 'Review statements and keep your insurance information current.',
