@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
 import StatusBadge from './StatusBadge';
 
@@ -12,6 +12,7 @@ export default function AppointmentsView() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [form, setForm] = useState(emptyForm);
+  const [tomorrow] = useState(() => new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10));
 
   useEffect(() => {
     api('/api/appointments')
