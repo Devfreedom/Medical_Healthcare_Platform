@@ -51,12 +51,14 @@ export default function AppointmentsView() {
   const past = appointments.filter((appointment) => appointment.status === 'completed');
 
   const list = activeTab === 'past' ? past : upcoming;
+  const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap gap-3">
+      {message && <p role="status" className="rounded-2xl bg-status-ok-bg px-4 py-3 text-sm font-medium text-status-ok">{message}</p>}
+      <div className="flex flex-wrap gap-3" role="tablist" aria-label="Appointments views">
         {['upcoming', 'past', 'book new'].map((tab) => (
-          <button key={tab} type="button" onClick={() => setActiveTab(tab)} className={`rounded-full px-5 py-2.5 text-sm font-semibold ${activeTab === tab ? 'bg-nb-teal text-white' : 'bg-white text-nb-teal ring-1 ring-nb-line'}`}>
+          <button key={tab} type="button" role="tab" aria-selected={activeTab === tab} onClick={() => { setActiveTab(tab); setMessage(''); setError(''); }} className={`rounded-full px-5 py-2.5 text-sm font-semibold ${activeTab === tab ? 'bg-nb-teal text-white' : 'bg-white text-nb-teal ring-1 ring-nb-line'}`}>
             {tab === 'book new' ? 'Book new' : tab[0].toUpperCase() + tab.slice(1)}
           </button>
         ))}
