@@ -78,7 +78,7 @@ export class ApiError extends Error {
   }
 }
 
-function isSessionError(error) {
+export function isSessionError(error) {
   return error instanceof ApiError && error.status === 401;
 }
 
@@ -153,5 +153,3 @@ export async function api(path, options = {}) {
 
   throw new ApiError('This feature is not connected yet.', { status: 501 });
 }
-
-export { isSessionError };
