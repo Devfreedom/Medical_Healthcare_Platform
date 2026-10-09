@@ -6,7 +6,7 @@ process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret-not-used-anywher
 process.env.NODE_ENV = 'test';
 
 import assert from 'node:assert/strict';
-import test, { describe } from 'node:test';
+import test, { after, describe } from 'node:test';
 import jwt from 'jsonwebtoken';
 
 const { requireAuth } = await import('../src/middleware/auth.js');
@@ -176,6 +176,6 @@ describe('requireAuth', () => {
 });
 
 // Restore the real pool so nothing else in the process uses a stub.
-process.on('exit', () => {
+after(() => {
   pool.query = originalQuery;
 });
