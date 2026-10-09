@@ -82,6 +82,53 @@ export function isSessionError(error) {
   return error instanceof ApiError && error.status === 401;
 }
 
+export const SESSION_ANONYMOUS = 'anonymous';
+export const SESSION_CHECKING = 'checking';
+export const SESSION_AUTHENTICATED = 'authenticated';
+export const SESSION_UNVERIFIED = 'unverified';
+
+export function anonymousSession() {
+  return { status: SESSION_ANONYMOUS, user: null, error: '' };
+}
+
+export function checkingSession() {
+  return { status: SESSION_CHECKING, user: null, error: '' };
+}
+
+// Decides what one /api/auth/me attempt means. Kept pure so the sign-out and
+// retry policy can be regression-tested without a browser or a React renderer.
+//
+// This is the single place that decides when a session is discarded:
+//   - a confirmed 401 (or a 200 with no user) proves the session is dead, so
+//     the stored credentials are cleared and the user returns to the login flow
+//   - a network failure or any other status leaves the session intact and asks
+//     the user to retry, because the token may still be perfectly valid
+//
+// `shouldClear` must only ever be true for those two cases.
+export function classifyVerification({ user, error } = {}) {
+  if (error) {
+    if (isSessionError(error)) {
+      return { ...anonymousSession(), shouldClear: true };
+    }
+
+    return {
+      status: SESSION_UNVERIFIED,
+      user: null,
+      error: typeof error.message === 'string' && error.message.trim()
+        ? error.message
+        : 'We could not verify your session.',
+      shouldClear: false,
+    };
+  }
+
+  if (!user) {
+    // A 200 that carries no user is as meaningless as a rejected token.
+    return { ...anonymousSession(), shouldClear: true };
+  }
+
+  return { status: SESSION_AUTHENTICATED, user, error: '', shouldClear: false };
+}
+
 async function remoteApi(path, options) {
   const token = getToken();
   const headers = new Headers(options.headers || {});

@@ -4,22 +4,22 @@ import Portal from './pages/patient/Portal';
 import Login from './pages/public/Login';
 import Register from './pages/public/Register';
 import {
+  anonymousSession,
   api,
+  checkingSession,
+  classifyVerification,
   clearSession,
   getToken,
-  isSessionError,
   setSession,
+  SESSION_AUTHENTICATED,
+  SESSION_CHECKING,
+  SESSION_UNVERIFIED,
   updateStoredUser,
 } from './lib/api';
 
 function getRoute() {
   return window.location.pathname.replace(/\/$/, '') || '/';
 }
-
-// Session is a single state machine so a cached user can never be shown as
-// authenticated until the backend has confirmed it.
-const ANONYMOUS = { status: 'anonymous', user: null, error: '' };
-const CHECKING = { status: 'checking', user: null, error: '' };
 
 function SessionShell({ title, detail, children }) {
   return (
@@ -35,7 +35,10 @@ function SessionShell({ title, detail, children }) {
 
 export default function App() {
   const [route, setRoute] = useState(getRoute);
-  const [session, setSessionState] = useState(() => (getToken() ? CHECKING : ANONYMOUS));
+  // Session is a single state machine so a cached user can never be shown as
+  // authenticated until the backend has confirmed it.
+  const [session, setSessionState] = useState(() =>
+    (getToken() ? checkingSession() : anonymousSession()));
   const [verifyAttempt, setVerifyAttempt] = useState(0);
 
   const user = session.user;
@@ -59,37 +62,26 @@ export default function App() {
     let cancelled = false;
 
     api('/api/auth/me')
-      .then((result) => {
-        if (cancelled) return;
+      .then(
+        (result) => {
+          if (cancelled) return;
 
-        const verified = result?.user;
-        if (!verified) {
-          clearSession();
-          setSessionState(ANONYMOUS);
-          return;
-        }
+          const outcome = classifyVerification({ user: result?.user });
+          if (outcome.shouldClear) clearSession();
+          if (outcome.status === SESSION_AUTHENTICATED) {
+            const token = getToken();
+            if (token) setSession(token, outcome.user);
+          }
+          setSessionState(outcome);
+        },
+        (error) => {
+          if (cancelled) return;
 
-        const token = getToken();
-        if (token) setSession(token, verified);
-        setSessionState({ status: 'authenticated', user: verified, error: '' });
-      })
-      .catch((error) => {
-        if (cancelled) return;
-
-        // A confirmed 401 is the only reason to end the session. Network
-        // failures and 5xx keep the session so the user can retry.
-        if (isSessionError(error)) {
-          clearSession();
-          setSessionState(ANONYMOUS);
-          return;
-        }
-
-        setSessionState({
-          status: 'unverified',
-          user: null,
-          error: error?.message || 'We could not verify your session.',
-        });
-      });
+          const outcome = classifyVerification({ error });
+          if (outcome.shouldClear) clearSession();
+          setSessionState(outcome);
+        },
+      );
 
     return () => { cancelled = true; };
   }, [verifyAttempt]);
@@ -102,7 +94,7 @@ export default function App() {
 
   const logout = () => {
     clearSession();
-    setSessionState(ANONYMOUS);
+    setSessionState(anonymousSession());
     go('/');
   };
 
@@ -119,16 +111,16 @@ export default function App() {
 
   const retrySession = () => {
     setVerifyAttempt((attempt) => attempt + 1);
-    setSessionState(CHECKING);
+    setSessionState(checkingSession());
   };
 
   const signInAgain = () => {
     clearSession();
-    setSessionState(ANONYMOUS);
+    setSessionState(anonymousSession());
     go('/login');
   };
 
-  if (session.status === 'checking') {
+  if (session.status === SESSION_CHECKING) {
     return (
       <SessionShell title="Northbridge Health" detail="Checking your session…">
         <div className="mt-4 text-sm text-[#6B7A77]" aria-live="polite" />
@@ -137,7 +129,7 @@ export default function App() {
   }
 
   // Unverified cached data must not reach the portal — offer a retry instead.
-  if (session.status === 'unverified') {
+  if (session.status === SESSION_UNVERIFIED) {
     return (
       <SessionShell title="Northbridge Health" detail={session.error}>
         <div className="mt-5 flex flex-wrap justify-center gap-3">
