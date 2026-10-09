@@ -12,6 +12,13 @@ import messagesRoutes from './routes/messages.js';
 
 const app = express();
 
+// Render terminates TLS and forwards to this service, so every request arrives
+// from the proxy rather than the patient. Trust exactly one hop so `req.ip`
+// resolves to the real client from X-Forwarded-For and the rate limiters count
+// per person. This must stay a number: `true` would let any client spoof that
+// header and bypass the limits entirely.
+app.set('trust proxy', 1);
+
 app.use(helmet());
 
 app.use(
