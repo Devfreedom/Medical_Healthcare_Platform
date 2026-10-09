@@ -31,14 +31,20 @@ function makeRes() {
 }
 
 // Runs requireAuth with a stubbed pool.query and reports how it responded.
-async function run({ token, query }) {
+async function run({ token, header, query }) {
   const res = makeRes();
   let nextCalled = false;
   let nextError = null;
 
   pool.query = query;
 
-  const req = { headers: token ? { authorization: `Bearer ${token}` } : {} };
+  const authorization = header !== undefined
+    ? header
+    : token
+      ? `Bearer ${token}`
+      : undefined;
+
+  const req = { headers: authorization ? { authorization } : {} };
   await requireAuth(req, res, (error) => {
     nextCalled = true;
     nextError = error || null;
@@ -62,14 +68,17 @@ describe('requireAuth', () => {
     assert.equal(nextCalled, false);
   });
 
-  test('rejects a malformed Authorization scheme with 401', async () => {
-    const { res } = await run({
-      token: 'abc',
-      query: () => { throw new Error('pool.query must not be called'); },
-    });
+  test('rejects a missing or non-Bearer Authorization scheme with 401', async () => {
+    for (const header of ['abc', 'Basic abc123', 'Bearer', 'Bearer   ']) {
+      const { res, nextCalled } = await run({
+        header,
+        query: () => { throw new Error('pool.query must not be called'); },
+      });
 
-    assert.equal(res.statusCode, 401);
-    assert.equal(res.body.message, 'Authentication required.');
+      assert.equal(res.statusCode, 401, `${header} should be rejected`);
+      assert.equal(res.body.message, 'Authentication required.');
+      assert.equal(nextCalled, false);
+    }
   });
 
   test('returns 401 for an invalid signature', async () => {
