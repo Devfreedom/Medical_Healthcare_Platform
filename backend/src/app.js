@@ -27,7 +27,10 @@ app.use(
 
 app.use(express.json({ limit: '100kb' }));
 
-const authLimiter = rateLimit({
+// Credential endpoints get their own, much lower budgets than the general auth
+// router. These are comfortably above normal use but still bound online
+// guessing; the shared limiters below keep a hard ceiling.
+const authRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
@@ -35,7 +38,25 @@ const authLimiter = rateLimit({
   message: { message: 'Too many requests. Try again later.' },
 });
 
-app.use('/api/auth', authLimiter);
+const loginRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many sign-in attempts. Try again in a few minutes.' },
+});
+
+const registerRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: 'Too many accounts created from this address. Try again later.' },
+});
+
+app.use('/api/auth/login', loginRateLimiter);
+app.use('/api/auth/register', registerRateLimiter);
+app.use('/api/auth', authRateLimiter);
 
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
