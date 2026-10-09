@@ -11,6 +11,12 @@ export default function ProfileView({ onProfileSaved }) {
 
   const [loadAttempt, setLoadAttempt] = useState(0);
 
+  const retryLoad = () => {
+    setLoading(true);
+    setLoadError('');
+    setLoadAttempt((attempt) => attempt + 1);
+  };
+
   useEffect(() => {
     let cancelled = false;
 
@@ -72,7 +78,7 @@ export default function ProfileView({ onProfileSaved }) {
         <p className="text-sm text-red-600">{loadError || 'Profile unavailable.'}</p>
         <button
           type="button"
-          onClick={() => setLoadAttempt((attempt) => attempt + 1)}
+          onClick={retryLoad}
           className="mt-4 rounded-full bg-nb-teal px-5 py-2.5 text-sm font-semibold text-white"
         >
           Try again

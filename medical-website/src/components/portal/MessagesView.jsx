@@ -16,11 +16,14 @@ export default function MessagesView() {
   const [status, setStatus] = useState('');
   const [loadAttempt, setLoadAttempt] = useState(0);
 
-  useEffect(() => {
-    let cancelled = false;
-
+  const retryLoad = () => {
     setLoading(true);
     setLoadError('');
+    setLoadAttempt((attempt) => attempt + 1);
+  };
+
+  useEffect(() => {
+    let cancelled = false;
 
     api('/api/messages')
       .then((result) => {
@@ -86,7 +89,7 @@ export default function MessagesView() {
         <p className="text-sm text-red-600">{loadError}</p>
         <button
           type="button"
-          onClick={() => setLoadAttempt((attempt) => attempt + 1)}
+          onClick={retryLoad}
           className="mt-4 rounded-full bg-nb-teal px-5 py-2.5 text-sm font-semibold text-white"
         >
           Try again
