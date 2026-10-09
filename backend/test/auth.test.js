@@ -147,7 +147,7 @@ describe('requireAuth', () => {
     const row = userRow();
     const token = jwt.sign({ sub: row.id }, env.jwtSecret);
 
-    const { res, nextCalled, req } = await run({
+    const { res, nextCalled, nextError, req } = await run({
       token,
       query: async (text, params) => {
         assert.match(text, /FROM users WHERE id = \$1/);
