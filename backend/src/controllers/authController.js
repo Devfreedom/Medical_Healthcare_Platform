@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import bcrypt from 'bcryptjs';
 import { pool } from '../config/db.js';
 import { signToken } from '../middleware/auth.js';
-import { isValidEmail } from '../utils/validation.js';
+import { isValidEmail, validateName } from '../utils/validation.js';
 
 function safeUser(row) {
   return { id: row.id, name: row.name, email: row.email };
@@ -12,18 +12,19 @@ export async function register(req, res, next) {
   try {
     const { name, email, password } = req.body || {};
 
-    if (!name || String(name).trim().length < 2) {
-      return res.status(422).json({ message: 'Enter your full name.' });
+    const nameCheck = validateName(name);
+    if (!nameCheck.ok) {
+      return res.status(422).json({ message: nameCheck.message });
     }
     if (!isValidEmail(email)) {
       return res.status(422).json({ message: 'Enter a valid email address.' });
     }
     if (typeof password !== 'string' || password.length < 8) {
-      return res.status(422).json({ message: 'Password must be at least 8 characters.' });
+      return res.status(422).json({ message: 'Password must be at least 8 characters.' };
     }
 
     const normalizedEmail = email.trim().toLowerCase();
-    const trimmedName = name.trim();
+    const trimmedName = nameCheck.value;
     const passwordHash = await bcrypt.hash(password, 12);
 
     const userId = randomUUID();
