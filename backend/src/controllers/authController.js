@@ -20,7 +20,7 @@ export async function register(req, res, next) {
       return res.status(422).json({ message: 'Enter a valid email address.' });
     }
     if (typeof password !== 'string' || password.length < 8) {
-      return res.status(422).json({ message: 'Password must be at least 8 characters.' };
+      return res.status(422).json({ message: 'Password must be at least 8 characters.' });
     }
 
     const normalizedEmail = email.trim().toLowerCase();

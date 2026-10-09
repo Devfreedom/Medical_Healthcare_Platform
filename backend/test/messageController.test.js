@@ -19,9 +19,10 @@ after(() => {
 
 const USER_ID = '11111111-1111-1111-1111-111111111111';
 
+// Express sends 200 when json() is called without an explicit status.
 function makeRes() {
   return {
-    statusCode: null,
+    statusCode: 200,
     body: null,
     status(code) {
       this.statusCode = code;
