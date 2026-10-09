@@ -74,7 +74,13 @@ Errors are `{ "message": "..." }` with status 401 / 403 / 404 / 409 / 422 / 500.
 | GET    | `/api/appointments`   | yes  | own appointments `{appointments}`    |
 | POST   | `/api/appointments`   | yes  | `{reason, provider, visitType, date}` (future date; time `"To be confirmed"`, status `pending`) → 201 `{appointment}` |
 | GET    | `/api/messages`       | yes  | own threads `{threads}`              |
-| POST   | `/api/messages`       | yes  | `{threadName, body}` (non-empty) → 201 `{message}`; no fake replies |
+| POST   | `/api/messages`       | yes  | `{threadName, body}` (non-empty, ≤2000 chars) → 201 `{message}`; the conversation must already belong to you (404 otherwise); no fake replies |
+
+`PUT /api/profile` accepts `name` (2–100 chars after trimming), `dateOfBirth` (real
+calendar date, not in the future; `""` clears), `phone` (≤32 chars, international
+formatting allowed; `""` clears) and `notifications` with boolean values only.
+Invalid input returns 422, and the `users` + `patient_profiles` rows are written
+in one transaction.
 
 ## 6. Frontend connection
 
@@ -93,5 +99,23 @@ changes are needed — all calls stay behind `src/lib/api.js`.
 
 - bcryptjs-hashed passwords (cost 12), never returned in responses.
 - JWT (`sub` = user id) verified per request; every protected query filters by `req.user.id`.
-- Parameterized SQL only; helmet headers; rate-limited `/api/auth`; strict CORS (no wildcard); centralized error handler (no stack traces in production).
-- Frontend temporary auth remains only as the `VITE_API_URL`-unset fallback.
+- Parameterized SQL only; helmet headers; strict CORS (no wildcard); centralized error handler (no stack traces in production).
+- Rate limits (15-minute window unless noted): 20 for `/api/auth/login`, 10 per hour for `/api/auth/register`, and a shared 100 for `/api/auth`.
+- Token verification failures return 401; database failures are passed to the centralized handler and return 500 rather than being reported as bad credentials.
+- Messages are stored only. They are not delivered to or monitored by clinic staff, and no clinician replies are generated.
+- Frontend temporary auth remains only as the `VITE_API_URL`-unset fallback, and is disabled outright in production builds (`import.meta.env.PROD`).
+
+## 8. Tests
+
+No test framework is required — the Node.js built-in runner is used:
+
+```bash
+npm test     # backend validation, profile and auth tests (56)
+```
+
+The auth and message controller tests stub `pool.query`, so no database is
+contacted and no real data is read or written.
+
+```bash
+cd ../medical-website && npm test   # frontend api.js wrapper tests (16)
+```

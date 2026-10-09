@@ -11,7 +11,9 @@ React/Vite  →  Node/Express API  →  database
 ```
 
 - **Frontend:** `medical-website/` — React + Vite. Uses `VITE_API_URL` to talk to
-  the API; falls back to a temporary `localStore` when unset (see
+  the API; falls back to a temporary `localStore` when unset **in development
+  only**. In a production build a missing `VITE_API_URL` fails closed with a
+  configuration error rather than writing patient data to localStorage (see
   `medical-website/src/lib/api.js`).
 - **Backend:** `backend/` — real local Express + PostgreSQL API with JWT auth
   (see `backend/README.md`). Run locally only for now.
@@ -34,4 +36,17 @@ npm install
 npm run dev            # http://localhost:5173
 npm run build
 npm run lint
+npm test
 ```
+
+## Tests
+
+Both suites use the Node.js built-in test runner — no test framework is installed.
+
+```bash
+cd backend         && npm test    # validation, profile payload and auth middleware
+cd medical-website && npm test    # api.js session/config behaviour
+```
+
+The backend auth and message tests stub `pool.query`, so no database is
+contacted and no real data is read or written.
