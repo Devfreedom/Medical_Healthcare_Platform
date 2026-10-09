@@ -24,7 +24,7 @@ const pageSubtitles = {
   appointments: 'Manage upcoming visits and request a new appointment.',
   telehealth: 'Preview of virtual visits — scheduling arrives with the backend phase.',
   records: 'Review visit history, documents, allergies, and prescriptions.',
-  messages: 'Stay connected with your care team.',
+  messages: 'Demo messages — not monitored by clinic staff. Do not send urgent or sensitive information here.',
   billing: 'Review statements and keep your insurance information current.',
   profile: 'Manage your personal details and notification preferences.',
 };
