@@ -14,9 +14,6 @@ export default function ProfileView({ onProfileSaved }) {
   useEffect(() => {
     let cancelled = false;
 
-    setLoading(true);
-    setLoadError('');
-
     api('/api/profile')
       .then((result) => {
         if (!cancelled) setForm(result.profile);

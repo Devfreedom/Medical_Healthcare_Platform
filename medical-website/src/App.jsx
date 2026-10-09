@@ -6,7 +6,6 @@ import Register from './pages/public/Register';
 import {
   api,
   clearSession,
-  getStoredUser,
   getToken,
   isSessionError,
   setSession,
@@ -16,6 +15,11 @@ import {
 function getRoute() {
   return window.location.pathname.replace(/\/$/, '') || '/';
 }
+
+// Session is a single state machine so a cached user can never be shown as
+// authenticated until the backend has confirmed it.
+const ANONYMOUS = { status: 'anonymous', user: null, error: '' };
+const CHECKING = { status: 'checking', user: null, error: '' };
 
 function SessionShell({ title, detail, children }) {
   return (
@@ -31,12 +35,10 @@ function SessionShell({ title, detail, children }) {
 
 export default function App() {
   const [route, setRoute] = useState(getRoute);
-  // Cached user data is only a hint for the portal chrome; it is never trusted
-  // for access control until verifySession() has confirmed it with the backend.
-  const [user, setUser] = useState(null);
-  const [checkingSession, setCheckingSession] = useState(Boolean(getToken()));
-  const [sessionError, setSessionError] = useState('');
+  const [session, setSessionState] = useState(() => (getToken() ? CHECKING : ANONYMOUS));
   const [verifyAttempt, setVerifyAttempt] = useState(0);
+
+  const user = session.user;
 
   useEffect(() => {
     const sync = () => setRoute(getRoute());
@@ -49,17 +51,12 @@ export default function App() {
     window.dispatchEvent(new PopStateEvent('popstate'));
   }, []);
 
-  const verifySession = useCallback(() => {
+  useEffect(() => {
     if (!getToken()) {
-      setUser(null);
-      setCheckingSession(false);
-      setSessionError('');
       return undefined;
     }
 
     let cancelled = false;
-    setCheckingSession(true);
-    setSessionError('');
 
     api('/api/auth/me')
       .then((result) => {
@@ -68,13 +65,13 @@ export default function App() {
         const verified = result?.user;
         if (!verified) {
           clearSession();
-          setUser(null);
+          setSessionState(ANONYMOUS);
           return;
         }
 
         const token = getToken();
         if (token) setSession(token, verified);
-        setUser(verified);
+        setSessionState({ status: 'authenticated', user: verified, error: '' });
       })
       .catch((error) => {
         if (cancelled) return;
@@ -83,51 +80,55 @@ export default function App() {
         // failures and 5xx keep the session so the user can retry.
         if (isSessionError(error)) {
           clearSession();
-          setUser(null);
+          setSessionState(ANONYMOUS);
           return;
         }
 
-        setSessionError(error?.message || 'We could not verify your session.');
-      })
-      .finally(() => {
-        if (!cancelled) setCheckingSession(false);
+        setSessionState({
+          status: 'unverified',
+          user: null,
+          error: error?.message || 'We could not verify your session.',
+        });
       });
 
     return () => { cancelled = true; };
-  }, []);
+  }, [verifyAttempt]);
 
-  useEffect(() => verifySession(), [verifyAttempt, verifySession]);
-
-  const handleAuthenticated = (session) => {
-    setSession(session.token, session.user);
-    setUser(session.user);
-    setSessionError('');
-    setCheckingSession(false);
+  const handleAuthenticated = (authenticated) => {
+    setSession(authenticated.token, authenticated.user);
+    setSessionState({ status: 'authenticated', user: authenticated.user, error: '' });
     go('/portal');
   };
 
   const logout = () => {
     clearSession();
-    setUser(null);
-    setSessionError('');
-    setCheckingSession(false);
+    setSessionState(ANONYMOUS);
     go('/');
   };
 
   const handleUserChange = (updatedUser) => {
     if (!updatedUser) {
-      setUser(null);
+      setSessionState((current) => ({ ...current, user: null }));
       return;
     }
 
     // Persist the rename so a reload does not resurrect the old name.
     const next = updateStoredUser(updatedUser);
-    setUser(next || updatedUser);
+    setSessionState((current) => ({ ...current, user: next || updatedUser }));
   };
 
-  const retrySession = () => setVerifyAttempt((attempt) => attempt + 1);
+  const retrySession = () => {
+    setVerifyAttempt((attempt) => attempt + 1);
+    setSessionState(CHECKING);
+  };
 
-  if (checkingSession) {
+  const signInAgain = () => {
+    clearSession();
+    setSessionState(ANONYMOUS);
+    go('/login');
+  };
+
+  if (session.status === 'checking') {
     return (
       <SessionShell title="Northbridge Health" detail="Checking your session…">
         <div className="mt-4 text-sm text-[#6B7A77]" aria-live="polite" />
@@ -136,9 +137,9 @@ export default function App() {
   }
 
   // Unverified cached data must not reach the portal — offer a retry instead.
-  if (sessionError) {
+  if (session.status === 'unverified') {
     return (
-      <SessionShell title="Northbridge Health" detail={sessionError}>
+      <SessionShell title="Northbridge Health" detail={session.error}>
         <div className="mt-5 flex flex-wrap justify-center gap-3">
           <button
             type="button"
@@ -149,12 +150,7 @@ export default function App() {
           </button>
           <button
             type="button"
-            onClick={() => {
-              clearSession();
-              setUser(null);
-              setSessionError('');
-              go('/login');
-            }}
+            onClick={signInAgain}
             className="rounded-full border border-[#0A3C2E]/20 px-5 py-2.5 text-sm font-medium text-[#0A3C2E]"
           >
             Sign in again
