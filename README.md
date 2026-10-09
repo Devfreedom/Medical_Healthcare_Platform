@@ -45,8 +45,14 @@ Both suites use the Node.js built-in test runner — no test framework is instal
 
 ```bash
 cd backend         && npm test    # validation, profile payload and auth middleware
-cd medical-website && npm test    # api.js session/config behaviour
+cd medical-website && npm test    # api.js session/config behaviour and session verification policy
 ```
 
 The backend auth and message tests stub `pool.query`, so no database is
 contacted and no real data is read or written.
+
+The session policy is pinned by `medical-website/test/session.test.js`: a saved
+session is erased only on a confirmed HTTP 401, while network failures and 5xx
+responses keep the token so the user can retry. See
+[`MANUAL-TEST-api-outage.md`](MANUAL-TEST-api-outage.md) for the browser
+procedure that checks the same behaviour against a deployed build.
