@@ -49,26 +49,26 @@ export async function listAppointments(req, res, next) {
 // Provider/specialty/date/time/doctor are derived from the trusted slot +
 // doctor records, never from client input.
 export async function createAppointment(req, res, next) {
-  const client = await pool.connect().catch((error) => next(error));
-  if (!client) return undefined;
-  // pool.connect stub in unit tests resolves a plain client; if connecting
-  // failed, next(error) already ran and client is undefined.
-  try {
-    const { reason, visitType, slotId } = req.body || {};
+  const { reason, visitType, slotId } = req.body || {};
 
-    if (!reason || String(reason).trim().length === 0) {
-      client.release();
-      return res.status(422).json({ message: 'Please choose a reason.' });
-    }
-    if (!VALID_VISIT_TYPES.includes(visitType)) {
-      client.release();
-      return res.status(422).json({ message: 'Please choose a visit type.' });
-    }
-    if (!isUuid(slotId)) {
-      client.release();
-      return res.status(422).json({ message: 'Please choose an available time slot.' });
-    }
-    const slotKey = String(slotId).trim();
+  if (!reason || String(reason).trim().length === 0) {
+    return res.status(422).json({ message: 'Please choose a reason.' });
+  }
+  if (!VALID_VISIT_TYPES.includes(visitType)) {
+    return res.status(422).json({ message: 'Please choose a visit type.' });
+  }
+  if (!isUuid(slotId)) {
+    return res.status(422).json({ message: 'Please choose an available time slot.' });
+  }
+  const slotKey = String(slotId).trim();
+
+  let client;
+  try {
+    client = await pool.connect();
+  } catch (error) {
+    return next(error);
+  }
+  try {
 
     await client.query('BEGIN');
     try {
