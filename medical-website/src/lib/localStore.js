@@ -210,16 +210,29 @@ export function localCreateAppointment(payload) {
   // the booking UI functional when VITE_API_URL is unset.
   const directoryDoctor = localDoctors().doctors.find((doctor) => doctor.id === payload.doctorId);
 
+  // Local slot-aware path: when the UI supplies a slotId (real backend flow),
+  // echo it back with a WAT label so slot-based rendering can be exercised
+  // without the API. Legacy provider-text bookings keep working locally.
+  const slot = payload.slotId && payload.date
+    ? { id: payload.slotId, date: payload.date, display: '09:00 WAT' }
+    : null;
+  const resolvedSlot = slot
+    || (payload.slotId
+      ? localAvailability(payload.doctorId || directoryDoctor?.id || 'local-dr-odum', payload.date || new Date().toISOString().slice(0, 10)).slots.find((s) => s.id === payload.slotId) || null
+      : null);
+
   const appointment = {
     id: `appointment-${Date.now()}`,
     provider: directoryDoctor ? directoryDoctor.displayName : payload.provider,
     specialty: directoryDoctor ? directoryDoctor.specialty : payload.specialty || 'Primary Care',
     reason: payload.reason,
     visitType: payload.visitType,
-    date: payload.date,
-    time: 'To be confirmed',
+    date: resolvedSlot ? resolvedSlot.date : payload.date,
+    time: resolvedSlot ? resolvedSlot.display : 'To be confirmed',
+    scheduledTime: resolvedSlot ? resolvedSlot.display : null,
     status: 'pending',
-    doctorId: directoryDoctor ? directoryDoctor.id : null,
+    doctorId: directoryDoctor ? directoryDoctor.id : payload.doctorId || null,
+    slotId: resolvedSlot ? resolvedSlot.id : null,
   };
 
   data[id].appointments = [...(data[id].appointments || []), appointment];
@@ -239,6 +252,23 @@ export function localDoctors() {
       { id: 'local-dr-marx', displayName: 'Dr. Elena Marx', specialty: 'Dermatology' },
     ],
   };
+}
+
+// Development-only slot list so the slot-based booking form can be exercised
+// without the API. Production builds never reach here (api() fails closed).
+export function localAvailability(doctorId, date) {
+  const day = date || new Date().toISOString().slice(0, 10);
+  const slots = ['09:00', '09:30', '10:00'].map((clock) => ({
+    id: `${doctorId}-${day}-${clock.replace(':', '')}`,
+    startsAt: `${day}T${clock}:00+01:00`,
+    endsAt: `${day}T${clock === '09:00' ? '09:30' : clock === '09:30' ? '10:00' : '10:30'}:00+01:00`,
+    display: `${clock} WAT`,
+  }));
+  return { doctorId, date: day, slots };
+}
+
+export function localDoctorSlots() {
+  return { slots: [] };
 }
 
 export function localMessages() {
