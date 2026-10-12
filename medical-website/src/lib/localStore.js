@@ -62,7 +62,7 @@ export function localRegister({ name, email, password }) {
   }
 
   const id = `user-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const user = { id, name: name.trim(), email: normalizedEmail };
+  const user = { id, name: name.trim(), email: normalizedEmail, role: 'patient' };
 
   saveUsers([
     ...users,
@@ -123,6 +123,7 @@ export function localLogin({ email, password }) {
       id: user.id,
       name: user.name,
       email: user.email,
+      role: 'patient',
     },
   };
 }
@@ -138,6 +139,7 @@ export function localMe() {
       id: user.id,
       name: user.name,
       email: user.email,
+      role: 'patient',
     },
   };
 }
@@ -203,21 +205,40 @@ export function localCreateAppointment(payload) {
 
   if (!data[id]) throw new Error('Account data not found.');
 
+  // Development fallback directory (mirrors src/data/careTeam.js). Doctor
+  // accounts only exist on the real backend via CLI provisioning; this keeps
+  // the booking UI functional when VITE_API_URL is unset.
+  const directoryDoctor = localDoctors().doctors.find((doctor) => doctor.id === payload.doctorId);
+
   const appointment = {
     id: `appointment-${Date.now()}`,
-    provider: payload.provider,
-    specialty: payload.specialty || 'Primary Care',
+    provider: directoryDoctor ? directoryDoctor.displayName : payload.provider,
+    specialty: directoryDoctor ? directoryDoctor.specialty : payload.specialty || 'Primary Care',
     reason: payload.reason,
     visitType: payload.visitType,
     date: payload.date,
     time: 'To be confirmed',
     status: 'pending',
+    doctorId: directoryDoctor ? directoryDoctor.id : null,
   };
 
   data[id].appointments = [...(data[id].appointments || []), appointment];
   saveAllData(data);
 
   return { appointment };
+}
+
+// Development-only static doctor directory for the booking UI.
+// Real doctor records live in PostgreSQL (doctor_profiles) and are served by
+// GET /api/doctors once VITE_API_URL is configured.
+export function localDoctors() {
+  return {
+    doctors: [
+      { id: 'local-dr-odum', displayName: 'Dr. Amara Odum', specialty: 'Cardiology' },
+      { id: 'local-dr-kane', displayName: 'Dr. Marcus Kane', specialty: 'Primary Care' },
+      { id: 'local-dr-marx', displayName: 'Dr. Elena Marx', specialty: 'Dermatology' },
+    ],
+  };
 }
 
 export function localMessages() {

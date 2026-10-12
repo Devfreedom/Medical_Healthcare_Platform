@@ -38,9 +38,8 @@ export function validateProvisionInput({ name, email, password, specialty }) {
   if (typeof password !== 'string' || password.length < 8) {
     return { ok: false, message: 'Password must be at least 8 characters.' };
   }
-  if (specialty !== undefined && specialty !== null && String(specialty).trim().length === 0) {
-    return { ok: false, message: 'Specialty must not be empty.' };
-  }
+  // An empty specialty simply falls back to the default; only a non-empty
+  // value is stored.
   return {
     ok: true,
     value: {

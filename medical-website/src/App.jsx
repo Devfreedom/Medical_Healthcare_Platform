@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Home from './pages/public/Home';
 import Portal from './pages/patient/Portal';
+import DoctorPortal from './pages/doctor/DoctorPortal';
 import Login from './pages/public/Login';
 import Register from './pages/public/Register';
 import {
@@ -89,7 +90,9 @@ export default function App() {
   const handleAuthenticated = (authenticated) => {
     setSession(authenticated.token, authenticated.user);
     setSessionState({ status: 'authenticated', user: authenticated.user, error: '' });
-    go('/portal');
+    // Role comes from the verified /api/auth/me response (and login payload),
+    // never from client-chosen state: doctors land on /doctor, patients on /portal.
+    go(authenticated.user?.role === 'doctor' ? '/doctor' : '/portal');
   };
 
   const logout = () => {
@@ -152,18 +155,44 @@ export default function App() {
     );
   }
 
-  // Authenticated users never see the auth forms — send them to the portal.
+  // Authenticated users never see the auth forms — send them to their home portal.
   if ((route === '/login' || route === '/register') && user) {
-    if (window.location.pathname !== '/portal') go('/portal');
+    const home = user.role === 'doctor' ? '/doctor' : '/portal';
+    if (window.location.pathname !== home) go(home);
     return null;
   }
 
   if (route === '/login') return <Login onAuthenticated={handleAuthenticated} />;
   if (route === '/register') return <Register onAuthenticated={handleAuthenticated} />;
 
+  // Doctor portal: unauthenticated users go through login; patients are
+  // denied and sent back to their own portal.
+  if (route === '/doctor') {
+    if (!user) {
+      if (window.location.pathname !== '/login') go('/login');
+      return null;
+    }
+    if (user.role !== 'doctor') {
+      if (window.location.pathname !== '/portal') go('/portal');
+      return null;
+    }
+    return (
+      <DoctorPortal
+        user={user}
+        onLogout={logout}
+        onBack={() => go('/')}
+      />
+    );
+  }
+
   if (route === '/portal') {
     if (!user) {
       if (window.location.pathname !== '/login') go('/login');
+      return null;
+    }
+    // Doctors have a separate portal; keep them out of the patient views.
+    if (user.role === 'doctor') {
+      if (window.location.pathname !== '/doctor') go('/doctor');
       return null;
     }
     return (

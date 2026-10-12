@@ -2,11 +2,18 @@ import { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
 import StatusBadge from './StatusBadge';
 
-const emptyForm = { reason: 'Follow-up', provider: 'Dr. Amara Odum', visitType: 'video', date: '' };
+const emptyForm = { reason: 'Follow-up', doctorId: '', visitType: 'video', date: '' };
+
+const legacyProviders = [
+  { displayName: 'Dr. Amara Odum', specialty: 'Primary Care' },
+  { displayName: 'Dr. Marcus Kane', specialty: 'Primary Care' },
+  { displayName: 'Dr. Elena Marx', specialty: 'Primary Care' },
+];
 
 export default function AppointmentsView() {
   const [activeTab, setActiveTab] = useState('upcoming');
   const [appointments, setAppointments] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -15,8 +22,11 @@ export default function AppointmentsView() {
   const [tomorrow] = useState(() => new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10));
 
   useEffect(() => {
-    api('/api/appointments')
-      .then((result) => setAppointments(result.appointments || []))
+    Promise.all([api('/api/appointments'), api('/api/doctors').catch(() => ({ doctors: [] }))])
+      .then(([apptResult, doctorResult]) => {
+        setAppointments(apptResult.appointments || []);
+        setDoctors(doctorResult.doctors || []);
+      })
       .catch((requestError) => setError(requestError.message))
       .finally(() => setLoading(false));
   }, []);
@@ -31,11 +41,29 @@ export default function AppointmentsView() {
       return;
     }
 
+    if (doctors.length > 0 && !form.doctorId) {
+      setError('Please choose a doctor.');
+      return;
+    }
+
+    // Prefer the real doctor directory; fall back to the legacy provider
+    // text path only when no directory record was loaded.
+    const selectedDoctor = doctors.find((doctor) => doctor.id === form.doctorId);
+    const payload = selectedDoctor
+      ? { reason: form.reason, visitType: form.visitType, date: form.date, doctorId: selectedDoctor.id }
+      : {
+          reason: form.reason,
+          visitType: form.visitType,
+          date: form.date,
+          provider: legacyProviders[0].displayName,
+          specialty: legacyProviders[0].specialty,
+        };
+
     setSaving(true);
     try {
       const result = await api('/api/appointments', {
         method: 'POST',
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       setAppointments((current) => [...current, result.appointment]);
       setMessage('Appointment request saved. Our care team will confirm the time.');
@@ -98,7 +126,14 @@ export default function AppointmentsView() {
         <div className="rounded-2xl border border-nb-line bg-nb-sand p-5 shadow-[0_12px_24px_rgba(19,42,44,0.04)]">
           <form onSubmit={submit} className="grid gap-4 md:grid-cols-2">
             <label className="text-sm font-medium">Reason<select name="reason" value={form.reason} onChange={(e) => setForm((v) => ({ ...v, reason: e.target.value }))} className="mt-2 w-full rounded-full border border-nb-line bg-white px-4 py-3 outline-none focus:border-nb-teal"><option>Follow-up</option><option>Annual wellness</option><option>New concern</option><option>Medication review</option></select></label>
-            <label className="text-sm font-medium">Provider<select name="provider" value={form.provider} onChange={(e) => setForm((v) => ({ ...v, provider: e.target.value }))} className="mt-2 w-full rounded-full border border-nb-line bg-white px-4 py-3 outline-none focus:border-nb-teal"><option>Dr. Amara Odum</option><option>Dr. Marcus Kane</option><option>Dr. Elena Marx</option></select></label>
+            <label className="text-sm font-medium">Provider
+              <select name="doctorId" value={form.doctorId} onChange={(e) => setForm((v) => ({ ...v, doctorId: e.target.value }))} className="mt-2 w-full rounded-full border border-nb-line bg-white px-4 py-3 outline-none focus:border-nb-teal">
+                <option value="">{doctors.length > 0 ? 'Select a doctor' : 'Any available doctor'}</option>
+                {doctors.map((doctor) => (
+                  <option key={doctor.id} value={doctor.id}>{doctor.displayName} · {doctor.specialty}</option>
+                ))}
+              </select>
+            </label>
             <label className="text-sm font-medium">Visit type<select name="visitType" value={form.visitType} onChange={(e) => setForm((v) => ({ ...v, visitType: e.target.value }))} className="mt-2 w-full rounded-full border border-nb-line bg-white px-4 py-3 outline-none focus:border-nb-teal"><option value="video">Video</option><option value="in-person">In person</option></select></label>
             <label className="text-sm font-medium">Preferred date (must be after today)<input type="date" name="date" min={tomorrow} value={form.date} onChange={(e) => setForm((v) => ({ ...v, date: e.target.value }))} className="mt-2 w-full rounded-full border border-nb-line bg-white px-4 py-3 outline-none focus:border-nb-teal" /></label>
             <div className="md:col-span-2">

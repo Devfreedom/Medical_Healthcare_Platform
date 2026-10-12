@@ -1,6 +1,8 @@
 const statusStyles = {
   confirmed: 'bg-status-ok-bg text-status-ok',
   pending: 'bg-status-warn-bg text-status-warn',
+  rejected: 'bg-status-danger-bg text-status-danger',
+  cancelled: 'bg-status-danger-bg text-status-danger',
   urgent: 'bg-status-danger-bg text-status-danger',
   normal: 'bg-status-info-bg text-status-info',
   review: 'bg-status-warn-bg text-status-warn',
@@ -15,6 +17,8 @@ const statusStyles = {
 const labels = {
   confirmed: 'Confirmed',
   pending: 'Pending',
+  rejected: 'Rejected',
+  cancelled: 'Cancelled',
   urgent: 'Urgent',
   normal: 'Normal',
   review: 'Needs review',

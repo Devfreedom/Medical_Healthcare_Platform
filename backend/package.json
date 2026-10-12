@@ -8,6 +8,7 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "migrate": "node src/db/migrate.js",
+    "provision-doctor": "node scripts/provision-doctor.js",
     "test": "node --test \"test/**/*.test.js\""
   },
   "dependencies": {

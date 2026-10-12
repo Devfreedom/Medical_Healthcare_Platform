@@ -8,6 +8,7 @@ import {
   localAppointments,
   localCreateAppointment,
   localCreateMessage,
+  localDoctors,
   localLogin,
   localLogout,
   localMe,
@@ -195,6 +196,7 @@ export async function api(path, options = {}) {
   if (path === '/api/profile' && options.method === 'PUT') return localUpdateProfile(body);
   if (path === '/api/appointments' && !options.method) return localAppointments();
   if (path === '/api/appointments' && options.method === 'POST') return localCreateAppointment(body);
+  if (path === '/api/doctors' && !options.method) return localDoctors();
   if (path === '/api/messages' && !options.method) return localMessages();
   if (path === '/api/messages' && options.method === 'POST') return localCreateMessage(body);
 
