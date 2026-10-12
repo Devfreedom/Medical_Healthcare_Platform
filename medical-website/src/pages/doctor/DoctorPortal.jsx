@@ -51,8 +51,6 @@ export default function DoctorPortal({ user, onLogout, onBack }) {
 
   useEffect(() => {
     let cancelled = false;
-    setSlotsLoading(true);
-    setSlotsError('');
     api('/api/doctor/availability')
       .then((result) => {
         if (!cancelled) setSlots(result.slots || []);
@@ -116,6 +114,12 @@ export default function DoctorPortal({ user, onLogout, onBack }) {
     } finally {
       setPublishing(false);
     }
+  };
+
+  const retrySlots = () => {
+    setSlotsError('');
+    setSlotsLoading(true);
+    setSlotsAttempt((n) => n + 1);
   };
 
   const withdraw = async (id) => {
@@ -276,7 +280,7 @@ export default function DoctorPortal({ user, onLogout, onBack }) {
             ) : slotsError ? (
               <div className="flex flex-wrap items-center gap-3">
                 <p role="alert" className="text-sm text-status-danger">{slotsError}</p>
-                <button type="button" onClick={() => setSlotsAttempt((n) => n + 1)} className="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-nb-teal ring-1 ring-nb-line">Retry</button>
+                <button type="button" onClick={retrySlots} className="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-nb-teal ring-1 ring-nb-line">Retry</button>
               </div>
             ) : slots.length === 0 ? (
               <p className="text-sm text-nb-ink/60">No slots published yet.</p>

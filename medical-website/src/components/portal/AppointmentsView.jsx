@@ -41,16 +41,12 @@ export default function AppointmentsView() {
 
   // Load open slots whenever the selected doctor + date are both set.
   // The selected slot resets on either change so a stale time can never book.
+  // Loading flags are set in the change handlers (not here) to keep effects
+  // free of synchronous setState.
   useEffect(() => {
     if (activeTab !== 'book new') return;
-    if (!form.doctorId || !form.date) {
-      setSlots([]);
-      setSlotsError('');
-      return;
-    }
+    if (!form.doctorId || !form.date) return;
     let cancelled = false;
-    setSlotsLoading(true);
-    setSlotsError('');
     api(`/api/doctors/${form.doctorId}/availability?date=${encodeURIComponent(form.date)}`)
       .then((result) => {
         if (!cancelled) setSlots(result.slots || []);
@@ -68,12 +64,27 @@ export default function AppointmentsView() {
   }, [form.doctorId, form.date, slotsAttempt, activeTab]);
 
   const setField = (name, value) => {
+    if (name === 'doctorId' || name === 'date') {
+      // Reset slot selection + previous results synchronously in the event
+      // handler; the effect above then fetches the fresh availability.
+      setSlots([]);
+      setSlotsError('');
+      const nextDoctor = name === 'doctorId' ? value : form.doctorId;
+      const nextDate = name === 'date' ? value : form.date;
+      setSlotsLoading(Boolean(nextDoctor && nextDate));
+    }
     setForm((current) => {
       if (name === 'doctorId' || name === 'date') {
         return { ...current, [name]: value, slotId: '' };
       }
       return { ...current, [name]: value };
     });
+  };
+
+  const retrySlots = () => {
+    setSlotsError('');
+    setSlotsLoading(true);
+    setSlotsAttempt((n) => n + 1);
   };
 
   const submit = async (event) => {
@@ -192,7 +203,7 @@ export default function AppointmentsView() {
               ) : slotsError ? (
                 <div className="mt-2 flex flex-wrap items-center gap-3">
                   <p role="alert" className="text-sm text-red-600">{slotsError}</p>
-                  <button type="button" onClick={() => setSlotsAttempt((n) => n + 1)} className="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-nb-teal ring-1 ring-nb-line">Retry</button>
+                  <button type="button" onClick={retrySlots} className="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-nb-teal ring-1 ring-nb-line">Retry</button>
                 </div>
               ) : slots.length === 0 ? (
                 <p className="mt-2 text-sm text-nb-ink/60">No times are available on this date. Please choose another date.</p>
