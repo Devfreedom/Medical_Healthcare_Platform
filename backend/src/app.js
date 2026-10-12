@@ -9,6 +9,8 @@ import authRoutes from './routes/auth.js';
 import profileRoutes from './routes/profile.js';
 import appointmentsRoutes from './routes/appointments.js';
 import messagesRoutes from './routes/messages.js';
+import doctorsRoutes from './routes/doctors.js';
+import doctorRoutes from './routes/doctor.js';
 
 const app = express();
 
@@ -70,6 +72,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/appointments', appointmentsRoutes);
 app.use('/api/messages', messagesRoutes);
+app.use('/api/doctors', doctorsRoutes);
+app.use('/api/doctor', doctorRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
