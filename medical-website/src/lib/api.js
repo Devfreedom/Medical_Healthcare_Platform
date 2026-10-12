@@ -6,9 +6,11 @@
 // no component changes.
 import {
   localAppointments,
+  localAvailability,
   localCreateAppointment,
   localCreateMessage,
   localDoctors,
+  localDoctorSlots,
   localLogin,
   localLogout,
   localMe,
@@ -197,6 +199,18 @@ export async function api(path, options = {}) {
   if (path === '/api/appointments' && !options.method) return localAppointments();
   if (path === '/api/appointments' && options.method === 'POST') return localCreateAppointment(body);
   if (path === '/api/doctors' && !options.method) return localDoctors();
+  if (path.startsWith('/api/doctors/') && path.endsWith('/availability') && !options.method) {
+    const match = /^\/api\/doctors\/([^/]+)\/availability/.exec(path.split('?')[0]);
+    const params = new URLSearchParams(path.includes('?') ? path.slice(path.indexOf('?')) : '');
+    return localAvailability(match ? decodeURIComponent(match[1]) : '', params.get('date'));
+  }
+  if (path === '/api/doctor/availability' && !options.method) return localDoctorSlots();
+  if (path === '/api/doctor/availability' && options.method === 'POST') {
+    throw new ApiError('Availability publishing needs the real API. Set VITE_API_URL.', { status: 501 });
+  }
+  if (/^\/api\/doctor\/availability\/.+\/deactivate$/.test(path.split('?')[0]) && options.method === 'PATCH') {
+    throw new ApiError('Availability management needs the real API. Set VITE_API_URL.', { status: 501 });
+  }
   if (path === '/api/messages' && !options.method) return localMessages();
   if (path === '/api/messages' && options.method === 'POST') return localCreateMessage(body);
 
