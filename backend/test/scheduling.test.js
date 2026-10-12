@@ -200,7 +200,7 @@ describe('slot booking safety', () => {
     const queries = [];
     const conflict = new Error('duplicate');
     conflict.code = '23505';
-    stubClient(queries, {}, { insertFails: conflict });
+    stubClient(queries, { insertFails: conflict });
     const res = makeRes();
     await createAppointment({ user: { id: PATIENT_B }, body: { reason: 'Follow-up', visitType: 'video', slotId: SLOT_ID } }, res, nextThrows);
     assert.equal(res.statusCode, 409);
@@ -208,7 +208,7 @@ describe('slot booking safety', () => {
   });
   test('transaction rollback on database failure', async () => {
     const queries = [];
-    stubClient(queries, {}, { insertFails: new Error('db exploded') });
+    stubClient(queries, { insertFails: new Error('db exploded') });
     let caught = null;
     await createAppointment({ user: { id: PATIENT_A }, body: { reason: 'Follow-up', visitType: 'video', slotId: SLOT_ID } }, makeRes(), (e) => { caught = e; });
     assert.match(caught.message, /db exploded/);
