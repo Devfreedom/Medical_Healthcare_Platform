@@ -261,34 +261,62 @@ describe('doctor appointment isolation', () => {
 });
 
 describe('appointment booking against the doctor directory', () => {
-  const futureDate = '2030-06-01';
+  const SLOT_ID = 'dddddddd-dddd-dddd-dddd-dddddddddddd';
+  const slotStartsAt = '2030-06-01T08:00:00.000Z'; // 09:00 WAT
+  const slotEndsAt = '2030-06-01T08:30:00.000Z';
 
-  test('unknown doctors cannot receive appointments (422)', async () => {
-    pool.query = async (text) => {
-      if (/FROM users u\s*\n?\s*JOIN doctor_profiles/.test(text)) return { rowCount: 0, rows: [] };
-      throw new Error('INSERT must not run for an unknown doctor');
+  function stubBookingClient(queries, slotRow, onInsert) {
+    const client = {
+      release() {},
+      query: async (text, params) => {
+        queries.push({ text, params });
+        if (text === 'BEGIN' || text === 'COMMIT' || text === 'ROLLBACK') return { rowCount: 0, rows: [] };
+        if (/FROM doctor_availability_slots s/.test(text)) {
+          return slotRow ? { rowCount: 1, rows: [slotRow] } : { rowCount: 0, rows: [] };
+        }
+        if (/FROM appointments\s*\n?\s*WHERE slot_id/.test(text)) return { rowCount: 0, rows: [] };
+        if (/INSERT INTO appointments/.test(text)) return onInsert(params);
+        throw new Error(`unexpected query: ${text}`);
+      },
     };
+    pool.connect = async () => client;
+  }
 
+  function realSlotRow() {
+    return {
+      id: SLOT_ID,
+      doctor_id: DOCTOR_A_ID,
+      starts_at: slotStartsAt,
+      ends_at: slotEndsAt,
+      is_active: true,
+      doctor_role: 'doctor',
+      display_name: 'Dr. Real',
+      specialty: 'Cardiology',
+      doctor_active: true,
+    };
+  }
+
+  test('bookings without a slot are rejected (422, no legacy fallback)', async () => {
+    pool.connect = async () => { throw new Error('DB must not be touched without a slot'); };
     const res = makeRes();
     await createAppointment(
       {
         user: { id: PATIENT_ID, role: 'patient' },
-        body: { reason: 'Follow-up', visitType: 'video', date: futureDate, doctorId: DOCTOR_A_ID },
+        body: { reason: 'Follow-up', visitType: 'video', provider: 'Dr. Amara Odum', date: '2030-06-01' },
       },
       res,
       (e) => { throw e; },
     );
-
     assert.equal(res.statusCode, 422);
   });
 
-  test('malformed doctor ids are rejected without a DB lookup', async () => {
-    pool.query = async () => { throw new Error('DB must not be touched for a malformed id'); };
+  test('malformed slot ids are rejected without a DB lookup', async () => {
+    pool.connect = async () => { throw new Error('DB must not be touched for a malformed id'); };
     const res = makeRes();
     await createAppointment(
       {
         user: { id: PATIENT_ID, role: 'patient' },
-        body: { reason: 'Follow-up', visitType: 'video', date: futureDate, doctorId: 'not-a-uuid' },
+        body: { reason: 'Follow-up', visitType: 'video', slotId: 'not-a-uuid' },
       },
       res,
       (e) => { throw e; },
@@ -296,35 +324,25 @@ describe('appointment booking against the doctor directory', () => {
     assert.equal(res.statusCode, 422);
   });
 
-  test('stores the request with the verified doctor record (display text from DB)', async () => {
+  test('stores the request with the verified slot record (display text from DB)', async () => {
     const queries = [];
-    pool.query = async (text, params) => {
-      queries.push({ text, params });
-      if (/FROM users u\s*\n?\s*JOIN doctor_profiles/.test(text)) {
-        return {
-          rowCount: 1,
-          rows: [{ id: DOCTOR_A_ID, display_name: 'Dr. Real', specialty: 'Cardiology' }],
-        };
-      }
-      if (/INSERT INTO appointments/.test(text)) {
-        const [, userId, doctorId, provider, specialty, reason, visitType, date] = params;
-        return {
-          rowCount: 1,
-          rows: [{
-            id: APPT_ID, user_id: userId, doctor_id: doctorId, provider, specialty,
-            reason, visit_type: visitType, date, time: 'To be confirmed', status: 'pending',
-          }],
-        };
-      }
-      throw new Error(`unexpected query: ${text}`);
-    };
+    stubBookingClient(queries, realSlotRow(), (params) => {
+      const [, userId, doctorId, slotId, provider, specialty, reason, visitType, date, time] = params;
+      return {
+        rowCount: 1,
+        rows: [{
+          id: APPT_ID, user_id: userId, doctor_id: doctorId, slot_id: slotId, provider, specialty,
+          reason, visit_type: visitType, date, time, status: 'pending',
+        }],
+      };
+    });
 
     const res = makeRes();
     await createAppointment(
       {
         user: { id: PATIENT_ID, role: 'patient' },
-        // Spoofed display text must be overridden by the verified record.
-        body: { reason: 'Follow-up', visitType: 'video', date: futureDate, doctorId: DOCTOR_A_ID, provider: 'Dr. Impostor', specialty: 'Fake' },
+        // Spoofed display text/date/doctor must be overridden by the slot record.
+        body: { reason: 'Follow-up', visitType: 'video', slotId: SLOT_ID, provider: 'Dr. Impostor', specialty: 'Fake', doctorId: DOCTOR_B_ID, date: '2030-01-01', time: '10:00' },
       },
       res,
       (e) => { throw e; },
@@ -332,37 +350,26 @@ describe('appointment booking against the doctor directory', () => {
 
     assert.equal(res.statusCode, 201);
     assert.equal(res.body.appointment.doctorId, DOCTOR_A_ID);
+    assert.equal(res.body.appointment.slotId, SLOT_ID);
     assert.equal(res.body.appointment.provider, 'Dr. Real');
     assert.equal(res.body.appointment.specialty, 'Cardiology');
+    assert.equal(res.body.appointment.date, '2030-06-01');
+    assert.equal(res.body.appointment.scheduledTime, '09:00 WAT');
+    assert.ok(queries.some((q) => q.text === 'BEGIN'));
+    assert.ok(queries.some((q) => q.text === 'COMMIT'));
   });
 
-  test('legacy provider-text bookings still work without a doctor', async () => {
-    pool.query = async (text, params) => {
-      if (/INSERT INTO appointments/.test(text)) {
-        return {
-          rowCount: 1,
-          rows: [{
-            id: APPT_ID, user_id: params[1], doctor_id: null, provider: params[3],
-            specialty: params[4], reason: params[5], visit_type: params[6],
-            date: params[7], time: 'To be confirmed', status: 'pending',
-          }],
-        };
-      }
-      throw new Error(`unexpected query: ${text}`);
-    };
-
+  test('unknown slots are rejected with 409 and rolled back', async () => {
+    const queries = [];
+    stubBookingClient(queries, null, () => { throw new Error('INSERT must not run for an unknown slot'); });
     const res = makeRes();
     await createAppointment(
-      {
-        user: { id: PATIENT_ID, role: 'patient' },
-        body: { reason: 'Follow-up', provider: 'Dr. Amara Odum', visitType: 'video', date: futureDate },
-      },
+      { user: { id: PATIENT_ID, role: 'patient' }, body: { reason: 'Follow-up', visitType: 'video', slotId: SLOT_ID } },
       res,
       (e) => { throw e; },
     );
-
-    assert.equal(res.statusCode, 201);
-    assert.equal(res.body.appointment.doctorId, null);
+    assert.equal(res.statusCode, 409);
+    assert.ok(queries.some((q) => q.text === 'ROLLBACK'));
   });
 
   test('patients still list only their own appointments after status changes', async () => {
@@ -373,14 +380,16 @@ describe('appointment booking against the doctor directory', () => {
         rowCount: 2,
         rows: [
           {
-            id: APPT_ID, user_id: PATIENT_ID, doctor_id: DOCTOR_A_ID, provider: 'Dr. Real',
+            id: APPT_ID, user_id: PATIENT_ID, doctor_id: DOCTOR_A_ID, slot_id: SLOT_ID, provider: 'Dr. Real',
             specialty: 'Cardiology', reason: 'Follow-up', visit_type: 'video',
-            date: futureDate, time: 'To be confirmed', status: 'confirmed',
+            date: '2030-06-01', time: '09:00 WAT', status: 'confirmed',
+            slot_starts_at: slotStartsAt, slot_ends_at: slotEndsAt,
           },
           {
-            id: 'dddddddd-dddd-dddd-dddd-dddddddddddd', user_id: PATIENT_ID, doctor_id: null,
+            id: 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', user_id: PATIENT_ID, doctor_id: null, slot_id: null,
             provider: 'Dr. Amara Odum', specialty: 'Primary Care', reason: 'New concern',
-            visit_type: 'in-person', date: futureDate, time: 'To be confirmed', status: 'pending',
+            visit_type: 'in-person', date: '2030-06-01', time: 'To be confirmed', status: 'pending',
+            slot_starts_at: null, slot_ends_at: null,
           },
         ],
       };
@@ -391,7 +400,10 @@ describe('appointment booking against the doctor directory', () => {
 
     assert.equal(res.statusCode, 200);
     assert.equal(res.body.appointments.length, 2);
-    assert.match(queries[0].text, /WHERE user_id = \$1/);
+    // Slotted row shows its real time; legacy row keeps "To be confirmed".
+    assert.equal(res.body.appointments[0].scheduledTime, '09:00 WAT');
+    assert.equal(res.body.appointments[1].time, 'To be confirmed');
+    assert.match(queries[0].text, /WHERE a\.user_id = \$1/);
     assert.deepEqual(queries[0].params, [PATIENT_ID]);
   });
 });
