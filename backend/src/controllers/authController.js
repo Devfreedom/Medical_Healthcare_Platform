@@ -5,7 +5,7 @@ import { signToken } from '../middleware/auth.js';
 import { isValidEmail, validateName } from '../utils/validation.js';
 
 function safeUser(row) {
-  return { id: row.id, name: row.name, email: row.email };
+  return { id: row.id, name: row.name, email: row.email, role: row.role || 'patient' };
 }
 
 export async function register(req, res, next) {
@@ -42,7 +42,10 @@ export async function register(req, res, next) {
       }
 
       const userResult = await client.query(
-        'INSERT INTO users (id, name, email, password_hash) VALUES ($1, $2, $3, $4) RETURNING id, name, email',
+        // Public registration always creates a patient account. Any `role`
+        // field in the request body is ignored so visitors can never grant
+        // themselves doctor privileges.
+        "INSERT INTO users (id, name, email, password_hash, role) VALUES ($1, $2, $3, $4, 'patient') RETURNING id, name, email, role",
         [userId, trimmedName, normalizedEmail, passwordHash],
       );
 
@@ -86,7 +89,7 @@ export async function login(req, res, next) {
     }
 
     const normalizedEmail = email.trim().toLowerCase();
-    const result = await pool.query('SELECT id, name, email, password_hash FROM users WHERE email = $1', [
+    const result = await pool.query('SELECT id, name, email, role, password_hash FROM users WHERE email = $1', [
       normalizedEmail,
     ]);
 
@@ -108,5 +111,5 @@ export async function login(req, res, next) {
 }
 
 export async function me(req, res) {
-  return res.json({ user: { id: req.user.id, name: req.user.name, email: req.user.email } });
+  return res.json({ user: { id: req.user.id, name: req.user.name, email: req.user.email, role: req.user.role || 'patient' } });
 }

@@ -29,9 +29,12 @@ export async function requireAuth(req, res, next) {
   // A database failure here is a server problem, not bad credentials. Let it
   // reach the centralized error handler so it becomes a 500 instead of a 401
   // that would log the user out.
+  //
+  // The role is read from the database on every request (not from a JWT claim
+  // or client state) so revoking or changing a role takes effect immediately.
   let result;
   try {
-    result = await pool.query('SELECT id, name, email FROM users WHERE id = $1', [payload.sub]);
+    result = await pool.query('SELECT id, name, email, role FROM users WHERE id = $1', [payload.sub]);
   } catch (error) {
     return next(error);
   }
@@ -44,4 +47,20 @@ export async function requireAuth(req, res, next) {
   // Everything downstream scopes its records to this user id.
   req.user = result.rows[0];
   return next();
+}
+
+// Role gate for doctor/admin-only routes. Must run after requireAuth.
+// 401 = no authenticated session; 403 = authenticated but wrong role.
+// The role always comes from req.user (database), never from request bodies,
+// localStorage, or JWT claims, so clients cannot escalate themselves.
+export function requireRole(role) {
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Authentication required.' });
+    }
+    if (req.user.role !== role) {
+      return res.status(403).json({ message: 'Access denied.' });
+    }
+    return next();
+  };
 }
